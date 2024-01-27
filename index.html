@@ -1,1290 +1,1 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-TZG5YSD728"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-TZG5YSD728');
-</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Quranic Verse</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <style>
-/* Common Button Styles */
-.button,
-button,
-#bookmarkButton,
-.popup button,
-#exit-button,
-.menu-button,
-.exit-button,
-.menu-item,
-#verse-of-the-day-button {
-  display: inline-block;
-  outline: 0;
-  cursor: pointer;
-  border: 2px solid #000;
-  border-radius: 3px;
-  color: #ffffff;
-  background: #4a4a4a;
-  font-size: 20px; /* Default size */
-  font-weight: 600;
-  line-height: 28px;
-  text-align: center;
-  transition-duration: .15s;
-  transition-property: all;
-  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
-  padding: 12px 20px; /* Default padding */
-}
-
-/* Medium-sized Button Styles */
-.button.medium,
-button.medium,
-#bookmarkButton.medium,
-.popup button.medium,
-#exit-button.medium,
-.menu-button.medium,
-.exit-button.medium,
-.menu-item.medium,
-#verse-of-the-day-button.medium {
-  font-size: 16px;
-  padding: 10px 16px;
-}
-
-.button:hover,
-button:hover,
-#bookmarkButton:hover,
-.popup button:hover,
-#exit-button:hover,
-.menu-button:hover,
-.exit-button:hover,
-.menu-item:hover,
-#verse-of-the-day-button:hover,
-.button.medium:hover,
-button.medium:hover,
-#bookmarkButton.medium:hover,
-.popup button.medium:hover,
-#exit-button.medium:hover,
-.menu-button.medium:hover,
-.exit-button.medium:hover,
-.menu-item.medium:hover,
-#verse-of-the-day-button.medium:hover {
-  color: #61dafb;
-  box-shadow: 0 0 20px rgba(97, 218, 251, 0.8);
-  transform: scale(1.05);
-}
-
-/* Rest of your existing styles */
-/* ... (Include the rest of your original styles below this line) ... */
-
-        #bookmarkButton {
-            padding: 12px 18px;
-            background-color: #3933338b;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 18px;
-          }
-          
-          #bookmarkButton:hover {
-            background-color: #5f6467;
-          }
-          
-          .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 24px;
-            background-color: #1f1e1e;
-            border: 2px solid #646060;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            max-width: 450px;
-            text-align: center;
-          }
-          
-          .popup button {
-            margin-top: 20px;
-            padding: 10px 18px;
-            background-color: #3933338b;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 18px;
-          }
-          
-          .popup button:hover {
-            background-color: #646464aa;
-          }
-          
-          #bookmarkedVersesContainer {
-            max-height: 250px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-          }
-          
-          .bookmarkedVerse {
-            padding: 10px;
-            background-color: #f9f9f9;
-            margin-bottom: 10px;
-            box-shadow: 0 0 8px rgb(149, 111, 111);
-            border-radius: 6px;
-            text-align: left;
-            line-height: 1.6;
-          }
-          
-          #verse-container {
-            position: relative;
-            text-align: center;
-            padding: 24px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-            transition: box-shadow 0.3s ease-in-out;
-            margin-top: 30px;
-          }
-          #progressBar {
-            width: 100%;
-            height: 8px;
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9;
-            background: linear-gradient(to right, #4CAF50 0%, #3498db 50%, #4CAF50 100%);
-            animation: smoothFill 0.4s linear forwards;
-            display: none;
-            border-radius: 4px;
-            overflow: hidden;
-          }
-          
-          @keyframes smoothFill {
-            to {
-              background: linear-gradient(to right, #4CAF50 100%, #3498db 100%, #4CAF50 100%);
-            }
-          }
-        #progressBar::-webkit-progress-value {
-            background: #ffffff; /* Set the color for the progress value */
-            transition: width 0.3s linear; /* Adjust the duration based on your preference */
-        }
-#reciterDropdown {
-    width: 100%;
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #000000;
-    border-radius: 4px;
-    margin-bottom: 10px;
-}
-
-/* Style for reciterDropdown options */
-#reciterDropdown option {
-    font-size: 14px;
-    background-color: #090909c3;
-    color: #ffffff;
-    text-align: center; /* Center the text within the option */
-    padding: 0; /* Remove padding */
-}
-
-
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-        
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            border-radius: 34px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            border-radius: 50%;
-            transition: transform 0.4s;
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        
-        input:checked + .slider {
-            background-color: #2196F3;
-        }
-        
-        input:focus + .slider {
-            box-shadow: 0 0 1px #2196F3;
-        }
-               
-        .about-container {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.863);
-            color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-            z-index: 1000;
-            display: none; /* Initially hide the container */
-        }
-        
-        .about-container p {
-            margin-bottom: 15px;
-        }
-        
-        /* Add styles to close the about container when clicked outside */
-        body:not(.menu-open) .about-container {
-            display: none;
-        }
-        
-    /* Add your CSS styling for the update screen here */
-    #update-screen {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.816);
-        color: #fff;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-      }
-      #update-content {
-        padding: 20px;
-      }
-  
-      #exit-button {
-        padding: 10px 20px;
-        background-color: #fff;
-        color: #333;
-        cursor: pointer;
-        border: none;
-        font-size: 16px;
-        margin-top: 20px;
-      }
-
-    .menu-button:hover {
-        background-color: #45a049;
-    }
-
-    /* Add this style to hide the Verse of the Day container initially */
-    #verse-of-the-day-container {
-        display: none;
-        text-align: center;
-        padding: 20px;
-        background-color: rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-        margin-top: 20px;
-    }
-
-    /* Add your existing styles below this line */
-    #verse-of-the-day-container {
-        text-align: center;
-        padding: 20px;
-        background-color: rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-        margin-top: 20px;
-    }
-
-    /* Add your existing styles below this line */
-    .menu-middle {
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* Add your existing styles below this line */
-    .instagram-container {
-        margin-top: 20px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* Add your existing styles below this line */
-    .instagram-container img {
-        width: 30px;
-        height: 30px;
-        border: 0;
-        margin-right: 10px;
-    }
-
-    /* Add your existing styles below this line */
-    .exit-button {
-        margin-top: auto;
-    }
-
-    /* Add your existing styles below this line */
-    .exit-button:hover {
-        background-color: #e74c3c;
-        color: #fff;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-    }
-
-    /* Add your existing styles below this line */
-    body {
-        background-image: url('https://winstonchurchill.hillsdale.edu/wp-content/uploads/2016/03/3855627586_4db6944f4e_o-840x430.jpg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        color: #ffffff;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-        transition: background-image 0.3s ease-in-out;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        margin: 0;
-        position: relative;
-    }
-
-    /* Add your existing styles below this line */
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.4);
-        z-index: -1;
-    }
-
-    /* Add your existing styles below this line */
-    .dark-theme {
-        background-color: #111;
-        color: #fff;
-    }
-
-    /* Add your existing styles below this line */
-    #verse-container {
-        text-align: center;
-        padding: 20px;
-        background-color: rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-        transition: box-shadow 0.3s ease-in-out;
-        margin-top: 20px;
-    }
-
-    /* Add your existing styles below this line */
-    @media (max-width: 767px) {
-        /* Styles for screens with a maximum width of 767px (typical phones) */
-        #verse-container {
-            padding: 10px;
-        }
-
-        #verse {
-            font-size: 1.2em;
-        }
-    }
-
-    @media (min-width: 768px) and (max-width: 1199px) {
-        /* Styles for screens with a width between 768px and 1199px (typical tablets) */
-        #verse-container {
-            padding: 15px;
-        }
-    }
-
-    @media (min-width: 1200px) {
-        /* Styles for screens with a minimum width of 1200px (typical desktops and larger) */
-        #verse-container {
-            margin-top: 100px;
-        }
-    }
-
-    /* Add your existing styles below this line */
-    body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        margin: 0;
-        background-color: #282c35;
-        color: #ffffff;
-        transition: background-color 0.3s ease-in-out;
-        position: relative;
-    }
-
-    /* Add your existing styles below this line */
-    .dark-theme {
-        background-color: #111;
-        color: #fff;
-    }
-
-    /* Add your existing styles below this line */
-    #verse-container {
-        text-align: center;
-        padding: 20px;
-        background-color: rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-        transition: box-shadow 0.3s ease-in-out;
-        margin-top: 20px;
-    }
-
-    /* Add your existing styles below this line */
-    #verse-container:hover {
-        box-shadow: 0 0 40px rgba(255, 255, 255, 0.6);
-    }
-
-    /* Add your existing styles below this line */
-    h1 {
-        font-size: 2em;
-        margin-bottom: 10px;
-        transition: color 0.3s ease-in-out;
-        position: absolute;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 2;
-      }
-      
-      .dark-theme h1 {
-        color: #424a52;
-      }
-      
-    /* Add your existing styles below this line */
-    #verse {
-        font-size: 1.5em;
-        margin-bottom: 5px;
-        background-color: transparent;
-        color: #fff;
-        transition: font-size 0.5s ease-in-out, color 0.5s ease-in-out;
-    }
-
-    /* Add your existing styles below this line */
-    #translation {
-        font-size: 1em;
-        color: #ddd;
-        transition: font-size 0.5s ease-in-out, color 0.5s ease-in-out;
-    }
-
-    /* Add your existing styles below this line */
-    #verse-number {
-        font-size: 0.8em;
-        color: #777;
-    }
-
-    /* Add your existing styles below this line */
-    #audioControl {
-        display: inline-flex;
-        align-items: center;
-        cursor: pointer;
-        margin-left: 10px;
-    }
-
-    /* Add your existing styles below this line */
-    #audioControl img {
-        width: 30px;
-        height: 30px;
-        border: 0;
-    }
-
-    /* Add your existing styles below this line */
-    #menu {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        cursor: pointer;
-        z-index: 100;
-    }
-
-    /* Add your existing styles below this line */
-    #menuArrow {
-        font-size: 3.5em;
-        margin-bottom: 10px;
-        transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
-        transform: rotate(180deg);
-        color: #555555;
-    }
-
-    /* Add your existing styles below this line */
-    #menuArrow:hover {
-        transform: scale(1.1);
-    }
-
-    /* Add your existing styles below this line */
-    .menu-items {
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        top: 0;
-        right: -50%;
-        height: 100%;
-        width: 0;
-        background-color: #333;
-        border-radius: 5px;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-        overflow: hidden;
-        transition: width 0.5s ease-in-out, right 0.5s ease-in-out;
-        z-index: 101;
-    }
-
-    /* Add your existing styles below this line */
-    .menu-top {
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    /* Add your existing styles below this line */
-    .menu-bottom {
-        margin-top: auto;
-        padding: 20px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    /* Add your existing styles below this line */
-    .menu-item,
-    .menu-bottom a {
-        color: #fff;
-        padding: 15px;
-        cursor: pointer;
-        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
-        border-radius: 5px;
-        text-align: center;
-        margin-bottom: 10px;
-        background-color: #555;
-        position: relative;
-        z-index: 1;
-    }
-
-    /* Add your existing styles below this line */
-    .menu-bottom a img {
-        width: 30px;
-        height: 30px;
-        border: 0;
-        display: block;
-    }
-
-    /* Add your existing styles below this line */
-    .menu-item:hover,
-    .menu-bottom a:hover {
-        color: #61dafb;
-        box-shadow: 0 0 20px rgba(97, 218, 251, 0.8);
-        transform: scale(1.05);
-    }
-
-    /* Add your existing styles below this line */
-    .menu-item:active,
-    .menu-bottom a:active {
-        box-shadow: 0 0 5px rgba(97, 218, 251, 0.8);
-        transform: scale(0.95);
-    }
-
-    /* Add your existing styles below this line */
-    .menu-item:focus,
-    .menu-bottom a:focus {
-        outline: none;
-    }
-
-    /* Add your existing styles below this line */
-    #volumeSlider {
-        width: 80%;
-        margin: 10px 0;
-    }
-
-    /* Add your existing styles below this line */
-    input[type="range"] {
-        width: 80%;
-        margin: 10px 0;
-    }
-
-    #share-buttons {
-        position: fixed;
-        top: 30px;
-        right: 30px;
-        display: flex;
-        z-index: 2;
-      }
-      
-      #share-buttons a {
-        margin-right: 12px;
-      }
-      
-      #share-buttons img {
-        width: 40px;
-        height: 40px;
-        border: 0;
-        cursor: pointer;
-      }
-      
-      #share-buttons .instagram-icon {
-        width: 40px;
-        height: 40px;
-        background-image: url('your-instagram-icon-url');
-        background-size: cover;
-        border-radius: 50%;
-      }
-      
-      #audioPlayer {
-        margin-top: 30px;
-        cursor: pointer;
-        position: relative;
-        transition: transform 0.5s ease-in-out;
-      }
-      
-      #audioPlayer:hover {
-        transform: scale(1.2);
-      }
-      
-      #audioPlayer img {
-        width: 40px;
-        height: 40px;
-        border: 0;
-      }
-    </style>
-</head>
-<body>
-    <h1>Random Quranic Verse</h1>
-    <div id="bookmarksPopup" class="popup">
-        <div id="bookmarkedVersesContainer"></div>
-        <button onclick="hideBookmarksPopup()">Exit</button>
-        <!-- Add a button to clear bookmarked verses -->
-        <button id="clearBookmarksButton">Clear Bookmarks</button>
-    </div>
-    <div id="update-screen">
-        <div id="update-content">
-          <h2>New Update!</h2>
-          <p>bugs fixes</p>
-          <p>تم تعديل جز من العطال</p>
-          <p></p>
-          <p></p>
-          <p></p>
-          <p></p>
-          <p></p>
-          <p></p>
-
-
-          <button id="exit-button">Exit</button>
-        </div>
-      </div>
-    <div id="menu" onclick="toggleMenu()">
-        <div id="menuArrow">&#8592;</div>
-        <div class="menu-items" id="menuItems">
-            <div class="menu-top">
-                <div class="menu-item">
-                    <label class="switch" for="themeToggle">
-                        <input type="checkbox" id="themeToggle" onclick="changeTheme()">
-                        <div class="slider round"></div>
-                    </label>
-                    <span class="toggle-label">Toggle Theme</span>
-                </div>
-                <input type="range" min="0.8" max="2.0" step="0.1" value="1.5" id="sizeSlider" oninput="changeVerseSize(this.value)">
-                <div class="menu-item" onclick="showAbout(event)">About</div>
-            </div>
-            <div class="menu-middle">
-                <button id="showBookmarksButton" onclick="showBookmarksPopup()">Show Bookmarks</button>
-                <label for="reciterDropdown">Select Reciter:</label>
-                <select id="reciterDropdown" onchange="changeReciter(this.value)">
-                    <option value="ar.abdulbasitmurattal">Abdul Basit</option>
-                    <option value="ar.abdullahbasfar">Abdullah Basfar</option>
-                    <option value="ar.abdurrahmaansudais">Abdurrahmaan As-Sudais</option>
-                    <option value="ar.abdulsamad">Abdul Samad</option>
-                    <option value="ar.shaatree">Abu Bakr Ash-Shaatree</option>
-                    <option value="ar.ahmedajamy">Ahmed ibn Ali al-Ajamy</option>
-                    <option value="ar.alafasy">Alafasy</option>
-                    <option value="ar.hanirifai">Hani Rifai</option>
-                    <option value="ar.husary">Husary</option>
-                    <option value="ar.husarymujawwad">Husary (Mujawwad)</option>
-                    <option value="ar.hudhaify">Hudhaify</option>
-                    <option value="ar.ibrahimakhbar">Ibrahim Akhdar</option>
-                    <option value="ar.mahermuaiqly">Maher Al Muaiqly</option>
-                    <option value="ar.minshawi">Minshawi</option>
-                    <option value="ar.minshawimujawwad">Minshawy (Mujawwad)</option>
-                    <option value="ar.muhammadayyoub">Muhammad Ayyoub</option>
-                    <option value="ar.muhammadjibreel">Muhammad Jibreel</option>
-                    <option value="ar.saoodshuraym">Saood bin Ibraaheem Ash-Shuraym</option>
-                    <option value="en.walk">Ibrahim Walk</option>
-                    <option value="fa.hedayatfarfooladvand">Fooladvand - Hedayatfar</option>
-                    <option value="ar.parhizgar">Parhizgar</option>
-                    <option value="ur.khan">Shamshad Ali Khan</option>
-                    <option value="zh.chinese">Chinese</option>
-                    <option value="fr.leclerc">Youssouf Leclerc</option>
-                    <option value="ar.aymanswoaid">Ayman Sowaid</option>
-                    <option value="ru.kuliev-audio">Elmir Kuliev by 1MuslimApp</option>
-                </select>
-                <button class="menu-button" onclick="toggleVerseOfTheDayContainer()">Toggle Verse of the Day</button>
-                <label for="changevolume">changeVolume:</label>
-                <input type="range" min="0" max="1" step="0.1" value="1" id="volumeSlider" oninput="changeVolume(this.value)">
-                <div class="about-container" id="aboutContainer" onclick="event.stopPropagation()">
-                    <h2>About This Website</h2>
-                    <p>This website provides a random Quranic verse along with audio recitation and translation. Explore the beauty of the Quran through random verses.</p>
-                    <p>For bug reporting or feedback, please click the button below:</p>
-                    <button id="reportBugButton" onclick="reportBug()">Report Bug</button>
-                </div>                 
-            </div>
-            
-            <div class="menu-bottom">
-                <!-- GitHub icon -->
-                <a class="menu-item" href="https://github.com/Yazanking" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub Icon">
-                </a>
-                <!-- Instagram icon -->
-                <a class="menu-item" href="https://www.instagram.com/1__7yzn/" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/725/725339.png" alt="Instagram Icon">
-                </a>
-            </div>
-        </div>
-    </div>
-</body>
-    <div id="verse-container" data-verse-reference="">    
-        <div id="verse-content">
-            <div id="verse-of-the-day-container">
-                <h2>Verse of the Day</h2>
-                <p id="verse-of-the-day"></p>
-            </div>            
-            <div id="audioControl" onclick="toggleAudio()">
-                <img src="https://img.icons8.com/material-rounded/24/000000/speaker.png" alt="Audio Control">
-            </div>
-            <p id="verse"></p>
-            <p id="translation"></p>
-            <p id="verse-number"></p>
-            <button id="bookmarkButton" onclick="bookmarkCurrentVerse()">Bookmark This Verse</button>
-            <!-- Add this HTML for the progress bar -->
-<progress id="progressBar" value="0" max="100"></progress>
-        </div>
-    </div>
-    <script>
-        
-        let isMenuVisible = false;
-        let verseChangeTimer;
-        let isAudioPlaying = false;
-        let currentAudioPlayer;
-        
-        document.addEventListener("DOMContentLoaded", function () {
-            // Set the current version number
-            const currentVersion = "2.5"; // Change this to your current version
-        
-            // Check if the user has seen the update for the current version
-            const hasSeenUpdateForVersion = localStorage.getItem(`hasSeenUpdate_${currentVersion}`);
-          
-            if (!hasSeenUpdateForVersion) {
-              showUpdateScreen();
-          
-              // Set the flag in local storage to indicate that the user has seen the update for this version
-              localStorage.setItem(`hasSeenUpdate_${currentVersion}`, "true");
-            }
-          
-    // Function to display the update screen
-    function showUpdateScreen() {
-        const updateScreen = document.getElementById("update-screen");
-        const exitButton = document.getElementById("exit-button");
-
-        updateScreen.style.display = "flex";
-
-        // Add event listener to exit button
-        exitButton.addEventListener("click", function () {
-            updateScreen.style.display = "none";
-        });
-    }
-});
-
-async function fetchVerse(verseNumber) {
-    try {
-        const verseData = await getVerseData(verseNumber);
-        const translationData = await getTranslationData(verseNumber);
-        const audioUrl = await getAudioUrl(verseNumber);
-        updateVerseUI(verseData.text, translationData.text, verseData.number);
-        setVerseReference(verseData.number);
-        playAudioInternal(audioUrl);
-        return audioUrl;
-    } catch (error) {
-        handleErrors(error, 'Error fetching verse:');
-    }
-}    
-        const VERSE_OF_THE_DAY_INTERVAL = 24 * 60 * 60 * 1000;
-
-        window.onload = async () => {
-            await fetchVerse();
-            startVerseChangeTimer();
-            fetchRandomVerseOfTheDay();
-            // Add this line to fetch the Verse of the Day
-        };
-        
-        // Add this line to fetch the Verse of the Day on a specified interval
-        setInterval(fetchRandomVerseOfTheDay, VERSE_OF_THE_DAY_INTERVAL);
-        
-        function showAbout(event) {
-            event.stopPropagation(); // Prevent the event from reaching the document
-            const aboutContainer = document.getElementById("aboutContainer");
-            aboutContainer.style.display = (aboutContainer.style.display === "block") ? "none" : "block";
-        }
-        function reportBug() {
-            // Redirect to your Instagram account
-            window.location.href = "https://www.instagram.com/1__7yzn/";
-        }        
-        function toggleVerseOfTheDayContainer() {
-            const verseOfTheDayContainer = document.getElementById('verse-of-the-day-container');
-            if (verseOfTheDayContainer.style.display === 'none' || !verseOfTheDayContainer.style.display) {
-                verseOfTheDayContainer.style.display = 'block';
-            } else {
-                verseOfTheDayContainer.style.display = 'none';
-            }
-        }
-        const API_BASE_URL = 'https://api.alquran.cloud/v1/ayah';
-        const EDITION_IDENTIFIER = 'ar.alf'; // Default edition identifier
-        let EDITIONS = 'ar.Alafasy';
-        const TRANSLATION_EDITIONS = 'en.sahih';        
-        const VERSE_CHANGE_INTERVAL = 10000;
-        async function fetchVerse(verseNumber) {
-            try {
-                if (!verseNumber) {
-                    verseNumber = getRandomVerseNumber();
-                }
-
-                const verseData = await getVerseData(verseNumber);
-                const translationData = await getTranslationData(verseNumber);
-                updateVerseUI(verseData.text, translationData.text, verseData.number);
-                setVerseReference(verseData.number);
-                return verseData.audio;
-            } catch (error) {
-                handleErrors(error, 'Error fetching verse:');
-            }
-        }
-        async function getTranslationData(verseNumber) {
-            const response = await axios.get(`${API_BASE_URL}/${verseNumber}/${TRANSLATION_EDITIONS}`);
-            return response.data.data;
-        }
-        async function playAudioInternal(audioUrl) {
-            const audioPlayer = new Audio(audioUrl);
-        
-            audioPlayer.addEventListener('ended', () => {
-                isAudioPlaying = false;
-                setTimeout(() => {
-                    startVerseChangeTimer();
-                }, 0); // Use setTimeout to allow the event loop to clear
-            });
-        
-            audioPlayer.play();
-        }
-        
-        
-        function playAudioInternal(audioUrl) {
-            const audioPlayer = new Audio(audioUrl);
-            audioPlayer.play();
-        
-            audioPlayer.addEventListener('ended', () => {
-                isAudioPlaying = false;
-                if (verseChangeTimer) {
-                    clearInterval(verseChangeTimer);
-                    startVerseChangeTimer(); // Start a new timer after clearing the existing one
-                }
-            });
-        }
-        
-        async function getVerseData(verseNumber) {
-            const response = await axios.get(`${API_BASE_URL}/${verseNumber}/${EDITIONS}`);
-            return response.data.data;
-        }
-        async function getAudioUrl() {
-            const verseContainer = document.getElementById('verse-container');
-            const verseReference = verseContainer.dataset.verseReference;
-
-            if (verseReference) {
-                const response = await axios.get(`${API_BASE_URL}/${verseReference}/editions/${EDITIONS}`);
-                return response.data.data[0].audio;
-            } else {
-                throw new Error('Verse reference is undefined.');
-            }
-        }
-        async function updateVerseUI(verseText, translationText, verseNumber) {
-            const verseElement = document.getElementById('verse');
-            const translationElement = document.getElementById('translation');
-            const verseNumberElement = document.getElementById('verse-number');
-
-            // Clear previous content
-            verseElement.innerHTML = '';
-            translationElement.innerHTML = '';
-            verseNumberElement.innerHTML = '';
-
-            // Display verse text and translation
-            verseElement.innerHTML = `<strong>${verseText}</strong>`;
-            translationElement.innerHTML = translationText;
-
-            // Display verse number using the provided code
-            verseNumberElement.innerText = `AYAH ${verseNumber}`;
-        }
-
-        function handleErrors(error, message) {
-            console.error(`${message} ${error}`);
-        }
-
-        async function playAudioInternal(audioPlayer) {
-            try {
-                const audioUrl = await getAudioUrl();
-                
-                // Clear the existing timer if it exists
-                clearInterval(verseChangeTimer);
-        
-                // Set the current audio player
-                currentAudioPlayer = audioPlayer;
-        
-                // Add progress bar
-                const progressBar = document.getElementById('progressBar');
-                progressBar.style.display = 'block';
-        
-                // Update progress bar dynamically
-                audioPlayer.addEventListener('timeupdate', () => {
-                    const percentage = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-                    progressBar.value = percentage;
-                });
-        
-                // Add event listener for when the audio ends
-                audioPlayer.addEventListener('ended', () => {
-                    isAudioPlaying = false; // Set the flag to indicate that audio is not playing
-                    
-                    // Start a new timer to change the verse after a rest interval
-                    verseChangeTimer = setInterval(() => {
-                        const randomVerseNumber = getRandomVerseNumber();
-                        fetchVerse(randomVerseNumber);
-                    }, VERSE_CHANGE_INTERVAL);
-        
-                    // Hide the progress bar
-                    progressBar.style.display = 'none';
-                });
-        
-                // Set the audio source and play
-                audioPlayer.src = audioUrl;
-                audioPlayer.play();
-        
-                isAudioPlaying = true; // Set the flag to indicate that audio is playing
-            } catch (error) {
-                handleErrors(error, 'Error playing audio:');
-            }
-        }
-        
-        function startVerseChangeTimer() {
-            // Start the initial timer to change the verse every 10 seconds
-            verseChangeTimer = setInterval(() => {
-                if (!isAudioPlaying) {
-                    const randomVerseNumber = getRandomVerseNumber();
-                    fetchVerse(randomVerseNumber);
-                }
-            }, VERSE_CHANGE_INTERVAL);
-        }
-        
-        function toggleAudio() {
-            if (isAudioPlaying) {
-                // If audio is already playing, do nothing
-                return;
-            } else {
-                // If audio is not playing, play it
-                isAudioPlaying = true;
-                const audioPlayer = new Audio();
-                playAudioInternal(audioPlayer);
-            }
-        }
-        function getRandomVerseNumber(currentVerseNumber) {
-            let randomVerseNumber;
-            do {
-                randomVerseNumber = Math.floor(Math.random() * 114 + 1);
-            } while (randomVerseNumber === currentVerseNumber);
-            return randomVerseNumber;
-        }
-        
-        function setVerseReference(verseReference) {
-            const verseContainer = document.getElementById('verse-container');
-            verseContainer.dataset.verseReference = verseReference;
-        }
-
-        function toggleMenu() {
-            const menuItems = document.getElementById('menuItems');
-            if (!isMenuVisible) {
-                showMenu();
-            } else {
-                hideMenu();
-            }
-        }
-        
-
-        function changeTheme() {
-            const body = document.body;
-            body.classList.toggle('dark-theme');
-          }
-          
-        function changeVerseSize(size) {
-            const verseElement = document.getElementById('verse');
-            verseElement.style.fontSize = `${size}em`;
-        }
-        let startX = 0;
-        
-        document.addEventListener('touchstart', handleTouchStart, false);
-        document.addEventListener('touchmove', handleTouchMove, false);
-        
-        function handleTouchStart(event) {
-            startX = event.touches[0].clientX;
-        }
-        
-        function handleTouchMove(event) {
-            if (!startX) return;
-        
-            const currentX = event.touches[0].clientX;
-            const deltaX = startX - currentX; // Adjusted for right swipe
-        
-            // Adjust this value based on the threshold for swipe to show the menu
-            const swipeThreshold = 50;
-        
-            // Check for smaller screen width (adjust the value based on your needs)
-            const isMobile = window.innerWidth <= 768;
-        
-            if (isMobile && deltaX > swipeThreshold) {
-                showMenu();
-                startX = 0; // Reset startX to prevent continuous triggering
-            }
-        }
-        
-        function showMenu() {
-            const menuItems = document.getElementById('menuItems');
-            menuItems.style.width = '50%'; // Adjust the width based on your preference
-            menuItems.style.right = '0';
-            isMenuVisible = true;
-            document.getElementById('menuArrow').classList.add('arrow-rotate');
-        }
-        
-        function hideMenu() {
-            const menuItems = document.getElementById('menuItems');
-            menuItems.style.width = '0';
-            menuItems.style.right = '-50%';
-            isMenuVisible = false;
-            document.getElementById('menuArrow').classList.remove('arrow-rotate');
-        }
-        // Prevent the menu from closing when interacting with its content
-        document.getElementById('menuItems').addEventListener('click', function (event) {
-            event.stopPropagation(); // Prevent the click event from propagating to document
-        });
-        
-        // Close the menu if the user clicks outside the menu
-        document.addEventListener('click', function (event) {
-            const menu = document.getElementById('menu');
-        
-            if (isMenuVisible && !menu.contains(event.target)) {
-                hideMenu();
-            }
-        });
-        async function fetchRandomVerseOfTheDay() {
-            try {
-                // Fetch the total number of Ayahs (verses) available
-                const totalAyahs = 6236;  // Update this if the actual total number is different
-        
-                // Generate a random Ayah number
-                const randomAyahNumber = Math.floor(Math.random() * totalAyahs) + 1;
-        
-                // Specify the Ayah number in the request
-                const response = await axios.get(`${API_BASE_URL}/${randomAyahNumber}/${EDITIONS}`);
-                const verseData = response.data.data;
-        
-                if (verseData && verseData.text) {
-                    const verseOfTheDayElement = document.getElementById('verse-of-the-day');
-        
-                    // Display the Verse of the Day with Ayah number
-                    verseOfTheDayElement.innerHTML = `<strong>${verseData.text}</strong><br>AYAH ${randomAyahNumber}`;
-                } else {
-                    throw new Error('Invalid response format for Verse of the Day. Verse data not available.');
-                }
-            } catch (error) {
-                console.error('Error fetching Verse of the Day:', error);
-        
-                // Optionally, you can display a message to the user indicating the failure.
-                const verseOfTheDayElement = document.getElementById('verse-of-the-day');
-                verseOfTheDayElement.innerHTML = `Failed to fetch Verse of the Day. Please check the console for details.`;
-            }
-        }
-        function showVolumeSlider() {
-            const volumeSliderContainer = document.getElementById('volumeSliderContainer');
-            volumeSliderContainer.style.display = 'block';
-        }
-        
-function changeVolume(volume) {
-    const audioPlayers = document.querySelectorAll('#verse-container audio');
-    audioPlayers.forEach((audioPlayer) => {
-        audioPlayer.volume = volume;
-    });
-}
-   
-               // Add this function to toggle the reciter list
-        function toggleReciterList() {
-            const reciterList = document.getElementById('reciterList');
-            if (reciterList.style.display === 'none' || !reciterList.style.display) {
-                reciterList.style.display = 'block';
-            } else {
-                reciterList.style.display = 'none';
-            }
-        }
-
-        // Add this function to change the reciter and fetch the verse
-        function changeReciter(reciterIdentifier) {
-            EDITIONS = reciterIdentifier;
-            // Fetch the verse with the selected reciter
-            //fetchVerse(getRandomVerseNumber());
-        }
-        var originalBackgroundImage = 'url(https://winstonchurchill.hillsdale.edu/wp-content/uploads/2016/03/3855627586_4db6944f4e_o-840x430.jpg)';
-
-        function changeTheme() {
-            var body = document.body;
-            var menu = document.getElementById('menu');
-            var updateScreen = document.getElementById('update-screen');
-        
-            // Toggle dark mode class on body
-            body.classList.toggle('dark-mode');
-        
-            // Toggle dark mode class on menu
-            menu.classList.toggle('dark-mode');
-        
-            // Toggle dark mode class on update screen
-            updateScreen.classList.toggle('dark-mode');
-        
-            // Additional styling for specific elements (adjust as needed)
-            if (body.classList.contains('dark-mode')) {
-                // Dark mode
-                body.style.backgroundColor = '#000';
-                body.style.backgroundImage = 'none';
-                // Set text color to white
-                body.style.color = '#fff';
-                // Additional styling for other elements
-            } else {
-                // Light mode (reverting to original background)
-                body.style.backgroundColor = '';
-                body.style.backgroundImage = originalBackgroundImage;
-                // Set text color to original color (e.g., black)
-                body.style.color = '#000'; // Replace with your original text color
-                // Additional styling for other elements
-            }
-        }
-        function changeVolume(volume) {
-            if (currentAudioPlayer) {
-                currentAudioPlayer.volume = volume;
-            }
-        }
-        let bookmarkedVerses = []; // Array to store bookmarked verses
-
-function bookmarkCurrentVerse() {
-    const verseContainer = document.getElementById('verse-container');
-    const verseReference = verseContainer.dataset.verseReference;
-    const verseText = document.getElementById('verse').innerHTML;
-    const translationText = document.getElementById('translation').innerHTML;
-
-    // Check if the verse is already bookmarked
-    if (!isVerseBookmarked(verseReference)) {
-        // Add the current verse to the bookmarks array
-        bookmarkedVerses.push({
-            verseReference,
-            verseText,
-            translationText
-        });
-
-        // Optionally, you can save the bookmarks array to local storage for persistence
-        saveBookmarksToLocalStorage();
-
-        // Provide feedback to the user (you can customize this part)
-        alert('Verse bookmarked successfully!');
-    } else {
-        // The verse is already bookmarked
-        alert('Verse is already bookmarked!');
-    }
-}
-
-function isVerseBookmarked(verseReference) {
-    // Check if the verse is already bookmarked
-    return bookmarkedVerses.some(verse => verse.verseReference === verseReference);
-}
-
-function saveBookmarksToLocalStorage() {
-    // Save the bookmarks array to local storage
-    localStorage.setItem('bookmarkedVerses', JSON.stringify(bookmarkedVerses));
-}
-
-function loadBookmarksFromLocalStorage() {
-    // Load bookmarks from local storage when the page loads
-    const storedBookmarks = localStorage.getItem('bookmarkedVerses');
-    if (storedBookmarks) {
-        bookmarkedVerses = JSON.parse(storedBookmarks);
-    }
-}
-
-function updateBookmarkedVersesContainer() {
-    const container = document.getElementById('bookmarkedVersesContainer');
-    container.innerHTML = '';
-
-    bookmarkedVerses.forEach(verse => {
-        const verseElement = document.createElement('div');
-        verseElement.innerHTML = `<strong>${verse.verseText}</strong><br>${verse.translationText}`;
-        container.appendChild(verseElement);
-    });
-}
-
-// Load bookmarks from local storage when the page loads
-document.addEventListener("DOMContentLoaded", function () {
-    // ... (your existing code)
-    loadBookmarksFromLocalStorage();
-    updateBookmarkedVersesContainer(); // Update bookmarks container when the page loads
-});
-
-function showBookmarksPopup() {
-    updateBookmarkedVersesContainer();
-    const popup = document.getElementById('bookmarksPopup');
-    popup.style.display = 'block';
-}
-
-function hideBookmarksPopup() {
-    const popup = document.getElementById('bookmarksPopup');
-    popup.style.display = 'none';
-}
-// Function to clear bookmarks
-function clearBookmarks() {
-    localStorage.removeItem('bookmarkedVerses');
-    // You can add additional logic here if needed
-    // For example, updating the UI to reflect the cleared bookmarks
-}
-
-// Add an event listener to the clear bookmarks button
-document.getElementById('clearBookmarksButton').addEventListener('click', clearBookmarks);
-</script>
-</body>
-</html>
+<script>var s="=\"EPDUZQF!iunm?=iunm!mboh>#fo#?=ifbe?!!!!=\"..!Hpphmf!ubh!)hubh/kt*!..?=tdsjqu!btzod!tsd>#iuuqt;00xxx/hpphmfubhnbobhfs/dpn0hubh0kt@je>H.U[H6ZTE839#?=0tdsjqu?=tdsjqu?!!xjoepx/ebubMbzfs!>!xjoepx/ebubMbzfs!}}!\\^<!!gvodujpo!hubh)*|ebubMbzfs/qvti)bshvnfout*<~!!hubh)(kt(-!ofx!Ebuf)**<!!hubh)(dpogjh(-!(H.U[H6ZTE839(*<=0tdsjqu?!!!!=nfub!dibstfu>#VUG.9#?!!!!=nfub!obnf>#wjfxqpsu#!dpoufou>#xjeui>efwjdf.xjeui-!jojujbm.tdbmf>2/1#?!!!!=ujumf?Sboepn!Rvsbojd!Wfstf=0ujumf?!!!!=tdsjqu!tsd>#iuuqt;00deo/ktefmjws/ofu0oqn0byjpt0ejtu0byjpt/njo/kt#?=0tdsjqu?!!!!=tuzmf?0+!Dpnnpo!Cvuupo!Tuzmft!+0/cvuupo-cvuupo-$cpplnbslCvuupo-/qpqvq!cvuupo-$fyju.cvuupo-/nfov.cvuupo-/fyju.cvuupo-/nfov.jufn-$wfstf.pg.uif.ebz.cvuupo!|!!ejtqmbz;!jomjof.cmpdl<!!pvumjof;!1<!!dvstps;!qpjoufs<!!cpsefs;!3qy!tpmje!$111<!!cpsefs.sbejvt;!4qy<!!dpmps;!$gggggg<!!cbdlhspvoe;!$5b5b5b<!!gpou.tj{f;!31qy<!0+!Efgbvmu!tj{f!+0!!gpou.xfjhiu;!711<!!mjof.ifjhiu;!39qy<!!ufyu.bmjho;!dfoufs<!!usbotjujpo.evsbujpo;!/26t<!!usbotjujpo.qspqfsuz;!bmm<!!usbotjujpo.ujnjoh.gvodujpo;!dvcjd.cf{jfs)/5-!1-!/3-!2*<!!qbeejoh;!23qy!31qy<!0+!Efgbvmu!qbeejoh!+0~0+!Nfejvn.tj{fe!Cvuupo!Tuzmft!+0/cvuupo/nfejvn-cvuupo/nfejvn-$cpplnbslCvuupo/nfejvn-/qpqvq!cvuupo/nfejvn-$fyju.cvuupo/nfejvn-/nfov.cvuupo/nfejvn-/fyju.cvuupo/nfejvn-/nfov.jufn/nfejvn-$wfstf.pg.uif.ebz.cvuupo/nfejvn!|!!gpou.tj{f;!27qy<!!qbeejoh;!21qy!27qy<~/cvuupo;ipwfs-cvuupo;ipwfs-$cpplnbslCvuupo;ipwfs-/qpqvq!cvuupo;ipwfs-$fyju.cvuupo;ipwfs-/nfov.cvuupo;ipwfs-/fyju.cvuupo;ipwfs-/nfov.jufn;ipwfs-$wfstf.pg.uif.ebz.cvuupo;ipwfs-/cvuupo/nfejvn;ipwfs-cvuupo/nfejvn;ipwfs-$cpplnbslCvuupo/nfejvn;ipwfs-/qpqvq!cvuupo/nfejvn;ipwfs-$fyju.cvuupo/nfejvn;ipwfs-/nfov.cvuupo/nfejvn;ipwfs-/fyju.cvuupo/nfejvn;ipwfs-/nfov.jufn/nfejvn;ipwfs-$wfstf.pg.uif.ebz.cvuupo/nfejvn;ipwfs!|!!dpmps;!$72ebgc<!!cpy.tibepx;!1!1!31qy!shcb):8-!329-!362-!1/9*<!!usbotgpsn;!tdbmf)2/16*<~0+!Sftu!pg!zpvs!fyjtujoh!tuzmft!+00+!///!)Jodmvef!uif!sftu!pg!zpvs!psjhjobm!tuzmft!cfmpx!uijt!mjof*!///!+0!!!!!!!!$cpplnbslCvuupo!|!!!!!!!!!!!!qbeejoh;!23qy!29qy<!!!!!!!!!!!!cbdlhspvoe.dpmps;!$4:44449c<!!!!!!!!!!!!dpmps;!$ggg<!!!!!!!!!!!!cpsefs;!opof<!!!!!!!!!!!!cpsefs.sbejvt;!7qy<!!!!!!!!!!!!dvstps;!qpjoufs<!!!!!!!!!!!!gpou.tj{f;!29qy<!!!!!!!!!!~!!!!!!!!!!$cpplnbslCvuupo;ipwfs!|!!!!!!!!!!!!cbdlhspvoe.dpmps;!$6g7578<!!!!!!!!!!~!!!!!!!!!!/qpqvq!|!!!!!!!!!!!!ejtqmbz;!opof<!!!!!!!!!!!!qptjujpo;!gjyfe<!!!!!!!!!!!!upq;!61&<!!!!!!!!!!!!mfgu;!61&<!!!!!!!!!!!!usbotgpsn;!usbotmbuf).61&-!.61&*<!!!!!!!!!!!!qbeejoh;!35qy<!!!!!!!!!!!!cbdlhspvoe.dpmps;!$2g2f2f<!!!!!!!!!!!!cpsefs;!3qy!tpmje!$757171<!!!!!!!!!!!!cpy.tibepx;!1!1!26qy!shcb)1-!1-!1-!1/3*<!!!!!!!!!!!!{.joefy;!2111<!!!!!!!!!!!!nby.xjeui;!561qy<!!!!!!!!!!!!ufyu.bmjho;!dfoufs<!!!!!!!!!!~!!!!!!!!!!/qpqvq!cvuupo!|!!!!!!!!!!!!nbshjo.upq;!31qy<!!!!!!!!!!!!qbeejoh;!21qy!29qy<!!!!!!!!!!!!cbdlhspvoe.dpmps;!$4:44449c<!!!!!!!!!!!!dpmps;!$ggg<!!!!!!!!!!!!cpsefs;!opof<!!!!!!!!!!!!cpsefs.sbejvt;!6qy<!!!!!!!!!!!!dvstps;!qpjoufs<!!!!!!!!!!!!gpou.tj{f;!29qy<!!!!!!!!!!~!!!!!!!!!!/qpqvq!cvuupo;ipwfs!|!!!!!!!!!!!!cbdlhspvoe.dpmps;!$757575bb<!!!!!!!!!!~!!!!!!!!!!$cpplnbslfeWfstftDpoubjofs!|!!!!!!!!!!!!nby.ifjhiu;!361qy<!!!!!!!!!!!!pwfsgmpx.z;!bvup<!!!!!!!!!!!!nbshjo.cpuupn;!31qy<!!!!!!!!!!~!!!!!!!!!!/cpplnbslfeWfstf!|!!!!!!!!!!!!qbeejoh;!21qy<!!!!!!!!!!!!cbdlhspvoe.dpmps;!$g:g:g:<!!!!!!!!!!!!nbshjo.cpuupn;!21qy<!!!!!!!!!!!!cpy.tibepx;!1!1!9qy!shc)25:-!222-!222*<!!!!!!!!!!!!cpsefs.sbejvt;!7qy<!!!!!!!!!!!!ufyu.bmjho;!mfgu<!!!!!!!!!!!!mjof.ifjhiu;!2/7<!!!!!!!!!!~!!!!!!!!!!$wfstf.dpoubjofs!|!!!!!!!!!!!!qptjujpo;!sfmbujwf<!!!!!!!!!!!!ufyu.bmjho;!dfoufs<!!!!!!!!!!!!qbeejoh;!35qy<!!!!!!!!!!!!cbdlhspvoe.dpmps;!shcb)366-!366-!366-!1/3*<!!!!!!!!!!!!cpsefs.sbejvt;!23qy<!!!!!!!!!!!!cpy.tibepx;!1!1!31qy!shcb)366-!366-!366-!1/4*<!!!!!!!!!!!!usbotjujpo;!cpy.tibepx!1/4t!fbtf.jo.pvu<!!!!!!!!!!!!nbshjo.upq;!41qy<!!!!!!!!!!~!!!!!!!!!!$qsphsfttCbs!|!!!!!!!!!!!!xjeui;!211&<!!!!!!!!!!!!ifjhiu;!9qy<!!!!!!!!!!!!qptjujpo;!bctpmvuf<!!!!!!!!!!!!cpuupn;!1<!!!!!!!!!!!!mfgu;!61&<!!!!!!!!!!!!usbotgpsn;!usbotmbufY).61&*<!!!!!!!!!!!!{.joefy;!:<!!!!!!!!!!!!cbdlhspvoe;!mjofbs.hsbejfou)up!sjhiu-!$5DBG61!1&-!$45:9ec!61&-!$5DBG61!211&*<!!!!!!!!!!!!bojnbujpo;!tnppuiGjmm!1/5t!mjofbs!gpsxbset<!!!!!!!!!!!!ejtqmbz;!opof<!!!!!!!!!!!!cpsefs.sbejvt;!5qy<!!!!!!!!!!!!pwfsgmpx;!ijeefo<!!!!!!!!!!~!!!!!!!!!!Alfzgsbnft!tnppuiGjmm!|!!!!!!!!!!!!up!|!!!!!!!!!!!!!!cbdlhspvoe;!mjofbs.hsbejfou)up!sjhiu-!$5DBG61!211&-!$45:9ec!211&-!$5DBG61!211&*<!!!!!!!!!!!!~!!!!!!!!!!~!!!!!!!!$qsphsfttCbs;;.xfclju.qsphsftt.wbmvf!|!!!!!!!!!!!!cbdlhspvoe;!$gggggg<!0+!Tfu!uif!dpmps!gps!uif!qsphsftt!wbmvf!+0!!!!!!!!!!!!usbotjujpo;!xjeui!1/4t!mjofbs<!0+!Bekvtu!uif!evsbujpo!cbtfe!po!zpvs!qsfgfsfodf!+0!!!!!!!!~$sfdjufsEspqepxo!|!!!!xjeui;!211&<!!!!qbeejoh;!9qy<!!!!gpou.tj{f;!27qy<!!!!cpsefs;!2qy!tpmje!$111111<!!!!cpsefs.sbejvt;!5qy<!!!!nbshjo.cpuupn;!21qy<~0+!Tuzmf!gps!sfdjufsEspqepxo!pqujpot!+0$sfdjufsEspqepxo!pqujpo!|!!!!gpou.tj{f;!25qy<!!!!cbdlhspvoe.dpmps;!$1:1:1:d4<!!!!dpmps;!$gggggg<!!!!ufyu.bmjho;!dfoufs<!0+!Dfoufs!uif!ufyu!xjuijo!uif!pqujpo!+0!!!!qbeejoh;!1<!0+!Sfnpwf!qbeejoh!+0~!!!!!!!!/txjudi!|!!!!!!!!!!!!qptjujpo;!sfmbujwf<!!!!!!!!!!!!ejtqmbz;!jomjof.cmpdl<!!!!!!!!!!!!xjeui;!71qy<!!!!!!!!!!!!ifjhiu;!45qy<!!!!!!!!~!!!!!!!!/txjudi!joqvu!|!!!!!!!!!!!!pqbdjuz;!1<!!!!!!!!!!!!xjeui;!1<!!!!!!!!!!!!ifjhiu;!1<!!!!!!!!~!!!!!!!!/tmjefs!|!!!!!!!!!!!!qptjujpo;!bctpmvuf<!!!!!!!!!!!!dvstps;!qpjoufs<!!!!!!!!!!!!upq;!1<!!!!!!!!!!!!mfgu;!1<!!!!!!!!!!!!sjhiu;!1<!!!!!!!!!!!!cpuupn;!1<!!!!!!!!!!!!cbdlhspvoe.dpmps;!$ddd<!!!!!!!!!!!!cpsefs.sbejvt;!45qy<!!!!!!!!~!!!!!!!!/tmjefs;cfgpsf!|!!!!!!!!!!!!qptjujpo;!bctpmvuf<!!!!!!!!!!!!dpoufou;!##<!!!!!!!!!!!!ifjhiu;!37qy<!!!!!!!!!!!!xjeui;!37qy<!!!!!!!!!!!!mfgu;!5qy<!!!!!!!!!!!!cpuupn;!5qy<!!!!!!!!!!!!cbdlhspvoe.dpmps;!xijuf<!!!!!!!!!!!!cpsefs.sbejvt;!61&<!!!!!!!!!!!!usbotjujpo;!usbotgpsn!1/5t<!!!!!!!!~!!!!!!!!joqvu;difdlfe!,!/tmjefs;cfgpsf!|!!!!!!!!!!!!usbotgpsn;!usbotmbufY)37qy*<!!!!!!!!~!!!!!!!!joqvu;difdlfe!,!/tmjefs!|!!!!!!!!!!!!cbdlhspvoe.dpmps;!$32:7G4<!!!!!!!!~!!!!!!!!joqvu;gpdvt!,!/tmjefs!|!!!!!!!!!!!!cpy.tibepx;!1!1!2qy!$32:7G4<!!!!!!!!~!!!!!!!!/bcpvu.dpoubjofs!|!!!!!!!!!!!!qptjujpo;!gjyfe<!!!!!!!!!!!!upq;!61&<!!!!!!!!!!!!mfgu;!61&<!!!!!!!!!!!!usbotgpsn;!usbotmbuf).61&-!.61&*<!!!!!!!!!!!!cbdlhspvoe.dpmps;!shcb)1-!1-!1-!1/974*<!!!!!!!!!!!!dpmps;!$ggg<!!!!!!!!!!!!qbeejoh;!31qy<!!!!!!!!!!!!cpsefs.sbejvt;!21qy<!!!!!!!!!!!!cpy.tibepx;!1!1!31qy!shcb)366-!366-!366-!1/7*<!!!!!!!!!!!!{.joefy;!2111<!!!!!!!!!!!!ejtqmbz;!opof<!0+!Jojujbmmz!ijef!uif!dpoubjofs!+0!!!!!!!!~!!!!!!!!/bcpvu.dpoubjofs!q!|!!!!!!!!!!!!nbshjo.cpuupn;!26qy<!!!!!!!!~!!!!!!!!0+!Bee!tuzmft!up!dmptf!uif!bcpvu!dpoubjofs!xifo!dmjdlfe!pvutjef!+0!!!!!!!!cpez;opu)/nfov.pqfo*!/bcpvu.dpoubjofs!|!!!!!!!!!!!!ejtqmbz;!opof<!!!!!!!!~!!!!0+!Bee!zpvs!DTT!tuzmjoh!gps!uif!vqebuf!tdsffo!ifsf!+0!!!!$vqebuf.tdsffo!|!!!!!!!!ejtqmbz;!opof<!!!!!!!!qptjujpo;!gjyfe<!!!!!!!!upq;!1<!!!!!!!!mfgu;!1<!!!!!!!!xjeui;!211&<!!!!!!!!ifjhiu;!211&<!!!!!!!!cbdlhspvoe.dpmps;!shcb)1-!1-!1-!1/927*<!!!!!!!!dpmps;!$ggg<!!!!!!!!kvtujgz.dpoufou;!dfoufs<!!!!!!!!bmjho.jufnt;!dfoufs<!!!!!!!!ufyu.bmjho;!dfoufs<!!!!!!~!!!!!!$vqebuf.dpoufou!|!!!!!!!!qbeejoh;!31qy<!!!!!!~!!!!!!$fyju.cvuupo!|!!!!!!!!qbeejoh;!21qy!31qy<!!!!!!!!cbdlhspvoe.dpmps;!$ggg<!!!!!!!!dpmps;!$444<!!!!!!!!dvstps;!qpjoufs<!!!!!!!!cpsefs;!opof<!!!!!!!!gpou.tj{f;!27qy<!!!!!!!!nbshjo.upq;!31qy<!!!!!!~!!!!/nfov.cvuupo;ipwfs!|!!!!!!!!cbdlhspvoe.dpmps;!$56b15:<!!!!~!!!!0+!Bee!uijt!tuzmf!up!ijef!uif!Wfstf!pg!uif!Ebz!dpoubjofs!jojujbmmz!+0!!!!$wfstf.pg.uif.ebz.dpoubjofs!|!!!!!!!!ejtqmbz;!opof<!!!!!!!!ufyu.bmjho;!dfoufs<!!!!!!!!qbeejoh;!31qy<!!!!!!!!cbdlhspvoe.dpmps;!shcb)366-!366-!366-!1/3*<!!!!!!!!cpsefs.sbejvt;!21qy<!!!!!!!!cpy.tibepx;!1!1!31qy!shcb)366-!366-!366-!1/4*<!!!!!!!!nbshjo.upq;!31qy<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!$wfstf.pg.uif.ebz.dpoubjofs!|!!!!!!!!ufyu.bmjho;!dfoufs<!!!!!!!!qbeejoh;!31qy<!!!!!!!!cbdlhspvoe.dpmps;!shcb)366-!366-!366-!1/3*<!!!!!!!!cpsefs.sbejvt;!21qy<!!!!!!!!cpy.tibepx;!1!1!31qy!shcb)366-!366-!366-!1/4*<!!!!!!!!nbshjo.upq;!31qy<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/nfov.njeemf!|!!!!!!!!qbeejoh;!31qy<!!!!!!!!ejtqmbz;!gmfy<!!!!!!!!gmfy.ejsfdujpo;!dpmvno<!!!!!!!!bmjho.jufnt;!dfoufs<!!!!!!!!kvtujgz.dpoufou;!dfoufs<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/jotubhsbn.dpoubjofs!|!!!!!!!!nbshjo.upq;!31qy<!!!!!!!!dvstps;!qpjoufs<!!!!!!!!ejtqmbz;!gmfy<!!!!!!!!bmjho.jufnt;!dfoufs<!!!!!!!!kvtujgz.dpoufou;!dfoufs<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/jotubhsbn.dpoubjofs!jnh!|!!!!!!!!xjeui;!41qy<!!!!!!!!ifjhiu;!41qy<!!!!!!!!cpsefs;!1<!!!!!!!!nbshjo.sjhiu;!21qy<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/fyju.cvuupo!|!!!!!!!!nbshjo.upq;!bvup<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/fyju.cvuupo;ipwfs!|!!!!!!!!cbdlhspvoe.dpmps;!$f85d4d<!!!!!!!!dpmps;!$ggg<!!!!!!!!cpy.tibepx;!1!1!31qy!shcb)366-!366-!366-!1/7*<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!cpez!|!!!!!!!!cbdlhspvoe.jnbhf;!vsm)(iuuqt;00xjotupodivsdijmm/ijmmtebmf/fev0xq.dpoufou0vqmpbet0312701404966738697`5ec7:55g5f`p.951y541/kqh(*<!!!!!!!!cbdlhspvoe.tj{f;!dpwfs<!!!!!!!!cbdlhspvoe.qptjujpo;!dfoufs<!!!!!!!!cbdlhspvoe.sfqfbu;!op.sfqfbu<!!!!!!!!dpmps;!$gggggg<!!!!!!!!ufyu.tibepx;!2qy!2qy!3qy!shcb)1-!1-!1-!1/6*<!!!!!!!!usbotjujpo;!cbdlhspvoe.jnbhf!1/4t!fbtf.jo.pvu<!!!!!!!!ejtqmbz;!gmfy<!!!!!!!!bmjho.jufnt;!dfoufs<!!!!!!!!kvtujgz.dpoufou;!dfoufs<!!!!!!!!ifjhiu;!211wi<!!!!!!!!nbshjo;!1<!!!!!!!!qptjujpo;!sfmbujwf<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!cpez;;cfgpsf!|!!!!!!!!dpoufou;!((<!!!!!!!!qptjujpo;!gjyfe<!!!!!!!!upq;!1<!!!!!!!!mfgu;!1<!!!!!!!!xjeui;!211&<!!!!!!!!ifjhiu;!211&<!!!!!!!!cbdlhspvoe;!shcb)1-!1-!1-!1/5*<!!!!!!!!{.joefy;!.2<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/ebsl.uifnf!|!!!!!!!!cbdlhspvoe.dpmps;!$222<!!!!!!!!dpmps;!$ggg<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!$wfstf.dpoubjofs!|!!!!!!!!ufyu.bmjho;!dfoufs<!!!!!!!!qbeejoh;!31qy<!!!!!!!!cbdlhspvoe.dpmps;!shcb)366-!366-!366-!1/3*<!!!!!!!!cpsefs.sbejvt;!21qy<!!!!!!!!cpy.tibepx;!1!1!31qy!shcb)366-!366-!366-!1/4*<!!!!!!!!usbotjujpo;!cpy.tibepx!1/4t!fbtf.jo.pvu<!!!!!!!!nbshjo.upq;!31qy<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!Anfejb!)nby.xjeui;!878qy*!|!!!!!!!!0+!Tuzmft!gps!tdsffot!xjui!b!nbyjnvn!xjeui!pg!878qy!)uzqjdbm!qipoft*!+0!!!!!!!!$wfstf.dpoubjofs!|!!!!!!!!!!!!qbeejoh;!21qy<!!!!!!!!~!!!!!!!!$wfstf!|!!!!!!!!!!!!gpou.tj{f;!2/3fn<!!!!!!!!~!!!!~!!!!Anfejb!)njo.xjeui;!879qy*!boe!)nby.xjeui;!22::qy*!|!!!!!!!!0+!Tuzmft!gps!tdsffot!xjui!b!xjeui!cfuxffo!879qy!boe!22::qy!)uzqjdbm!ubcmfut*!+0!!!!!!!!$wfstf.dpoubjofs!|!!!!!!!!!!!!qbeejoh;!26qy<!!!!!!!!~!!!!~!!!!Anfejb!)njo.xjeui;!2311qy*!|!!!!!!!!0+!Tuzmft!gps!tdsffot!xjui!b!njojnvn!xjeui!pg!2311qy!)uzqjdbm!eftlupqt!boe!mbshfs*!+0!!!!!!!!$wfstf.dpoubjofs!|!!!!!!!!!!!!nbshjo.upq;!211qy<!!!!!!!!~!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!cpez!|!!!!!!!!ejtqmbz;!gmfy<!!!!!!!!bmjho.jufnt;!dfoufs<!!!!!!!!kvtujgz.dpoufou;!dfoufs<!!!!!!!!ifjhiu;!211wi<!!!!!!!!nbshjo;!1<!!!!!!!!cbdlhspvoe.dpmps;!$393d46<!!!!!!!!dpmps;!$gggggg<!!!!!!!!usbotjujpo;!cbdlhspvoe.dpmps!1/4t!fbtf.jo.pvu<!!!!!!!!qptjujpo;!sfmbujwf<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/ebsl.uifnf!|!!!!!!!!cbdlhspvoe.dpmps;!$222<!!!!!!!!dpmps;!$ggg<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!$wfstf.dpoubjofs!|!!!!!!!!ufyu.bmjho;!dfoufs<!!!!!!!!qbeejoh;!31qy<!!!!!!!!cbdlhspvoe.dpmps;!shcb)366-!366-!366-!1/3*<!!!!!!!!cpsefs.sbejvt;!21qy<!!!!!!!!cpy.tibepx;!1!1!31qy!shcb)366-!366-!366-!1/4*<!!!!!!!!usbotjujpo;!cpy.tibepx!1/4t!fbtf.jo.pvu<!!!!!!!!nbshjo.upq;!31qy<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!$wfstf.dpoubjofs;ipwfs!|!!!!!!!!cpy.tibepx;!1!1!51qy!shcb)366-!366-!366-!1/7*<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!i2!|!!!!!!!!gpou.tj{f;!3fn<!!!!!!!!nbshjo.cpuupn;!21qy<!!!!!!!!usbotjujpo;!dpmps!1/4t!fbtf.jo.pvu<!!!!!!!!qptjujpo;!bctpmvuf<!!!!!!!!upq;!31qy<!!!!!!!!mfgu;!61&<!!!!!!!!usbotgpsn;!usbotmbufY).61&*<!!!!!!!!{.joefy;!3<!!!!!!~!!!!!!/ebsl.uifnf!i2!|!!!!!!!!dpmps;!$535b63<!!!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!$wfstf!|!!!!!!!!gpou.tj{f;!2/6fn<!!!!!!!!nbshjo.cpuupn;!6qy<!!!!!!!!cbdlhspvoe.dpmps;!usbotqbsfou<!!!!!!!!dpmps;!$ggg<!!!!!!!!usbotjujpo;!gpou.tj{f!1/6t!fbtf.jo.pvu-!dpmps!1/6t!fbtf.jo.pvu<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!$usbotmbujpo!|!!!!!!!!gpou.tj{f;!2fn<!!!!!!!!dpmps;!$eee<!!!!!!!!usbotjujpo;!gpou.tj{f!1/6t!fbtf.jo.pvu-!dpmps!1/6t!fbtf.jo.pvu<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!$wfstf.ovncfs!|!!!!!!!!gpou.tj{f;!1/9fn<!!!!!!!!dpmps;!$888<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!$bvejpDpouspm!|!!!!!!!!ejtqmbz;!jomjof.gmfy<!!!!!!!!bmjho.jufnt;!dfoufs<!!!!!!!!dvstps;!qpjoufs<!!!!!!!!nbshjo.mfgu;!21qy<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!$bvejpDpouspm!jnh!|!!!!!!!!xjeui;!41qy<!!!!!!!!ifjhiu;!41qy<!!!!!!!!cpsefs;!1<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!$nfov!|!!!!!!!!qptjujpo;!gjyfe<!!!!!!!!upq;!31qy<!!!!!!!!sjhiu;!31qy<!!!!!!!!ejtqmbz;!gmfy<!!!!!!!!gmfy.ejsfdujpo;!dpmvno<!!!!!!!!bmjho.jufnt;!gmfy.foe<!!!!!!!!dvstps;!qpjoufs<!!!!!!!!{.joefy;!211<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!$nfovBsspx!|!!!!!!!!gpou.tj{f;!4/6fn<!!!!!!!!nbshjo.cpuupn;!21qy<!!!!!!!!usbotjujpo;!usbotgpsn!1/4t!fbtf.jo.pvu-!dpmps!1/4t!fbtf.jo.pvu<!!!!!!!!usbotgpsn;!spubuf)291efh*<!!!!!!!!dpmps;!$666666<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!$nfovBsspx;ipwfs!|!!!!!!!!usbotgpsn;!tdbmf)2/2*<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/nfov.jufnt!|!!!!!!!!ejtqmbz;!gmfy<!!!!!!!!gmfy.ejsfdujpo;!dpmvno<!!!!!!!!qptjujpo;!gjyfe<!!!!!!!!upq;!1<!!!!!!!!sjhiu;!.61&<!!!!!!!!ifjhiu;!211&<!!!!!!!!xjeui;!1<!!!!!!!!cbdlhspvoe.dpmps;!$444<!!!!!!!!cpsefs.sbejvt;!6qy<!!!!!!!!cpy.tibepx;!1!1!31qy!shcb)366-!366-!366-!1/7*<!!!!!!!!pwfsgmpx;!ijeefo<!!!!!!!!usbotjujpo;!xjeui!1/6t!fbtf.jo.pvu-!sjhiu!1/6t!fbtf.jo.pvu<!!!!!!!!{.joefy;!212<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/nfov.upq!|!!!!!!!!qbeejoh;!31qy<!!!!!!!!ejtqmbz;!gmfy<!!!!!!!!gmfy.ejsfdujpo;!dpmvno<!!!!!!!!bmjho.jufnt;!dfoufs<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/nfov.cpuupn!|!!!!!!!!nbshjo.upq;!bvup<!!!!!!!!qbeejoh;!31qy<!!!!!!!!ejtqmbz;!gmfy<!!!!!!!!gmfy.ejsfdujpo;!spx<!!!!!!!!bmjho.jufnt;!dfoufs<!!!!!!!!kvtujgz.dpoufou;!dfoufs<!!!!!!!!hbq;!21qy<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/nfov.jufn-!!!!/nfov.cpuupn!b!|!!!!!!!!dpmps;!$ggg<!!!!!!!!qbeejoh;!26qy<!!!!!!!!dvstps;!qpjoufs<!!!!!!!!usbotjujpo;!cbdlhspvoe.dpmps!1/4t!fbtf.jo.pvu-!dpmps!1/4t!fbtf.jo.pvu-!cpy.tibepx!1/4t!fbtf.jo.pvu-!usbotgpsn!1/4t!fbtf.jo.pvu<!!!!!!!!cpsefs.sbejvt;!6qy<!!!!!!!!ufyu.bmjho;!dfoufs<!!!!!!!!nbshjo.cpuupn;!21qy<!!!!!!!!cbdlhspvoe.dpmps;!$666<!!!!!!!!qptjujpo;!sfmbujwf<!!!!!!!!{.joefy;!2<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/nfov.cpuupn!b!jnh!|!!!!!!!!xjeui;!41qy<!!!!!!!!ifjhiu;!41qy<!!!!!!!!cpsefs;!1<!!!!!!!!ejtqmbz;!cmpdl<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/nfov.jufn;ipwfs-!!!!/nfov.cpuupn!b;ipwfs!|!!!!!!!!dpmps;!$72ebgc<!!!!!!!!cpy.tibepx;!1!1!31qy!shcb):8-!329-!362-!1/9*<!!!!!!!!usbotgpsn;!tdbmf)2/16*<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/nfov.jufn;bdujwf-!!!!/nfov.cpuupn!b;bdujwf!|!!!!!!!!cpy.tibepx;!1!1!6qy!shcb):8-!329-!362-!1/9*<!!!!!!!!usbotgpsn;!tdbmf)1/:6*<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!/nfov.jufn;gpdvt-!!!!/nfov.cpuupn!b;gpdvt!|!!!!!!!!pvumjof;!opof<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!$wpmvnfTmjefs!|!!!!!!!!xjeui;!91&<!!!!!!!!nbshjo;!21qy!1<!!!!~!!!!0+!Bee!zpvs!fyjtujoh!tuzmft!cfmpx!uijt!mjof!+0!!!!joqvu\\uzqf>#sbohf#^!|!!!!!!!!xjeui;!91&<!!!!!!!!nbshjo;!21qy!1<!!!!~!!!!$tibsf.cvuupot!|!!!!!!!!qptjujpo;!gjyfe<!!!!!!!!upq;!41qy<!!!!!!!!sjhiu;!41qy<!!!!!!!!ejtqmbz;!gmfy<!!!!!!!!{.joefy;!3<!!!!!!~!!!!!!$tibsf.cvuupot!b!|!!!!!!!!nbshjo.sjhiu;!23qy<!!!!!!~!!!!!!$tibsf.cvuupot!jnh!|!!!!!!!!xjeui;!51qy<!!!!!!!!ifjhiu;!51qy<!!!!!!!!cpsefs;!1<!!!!!!!!dvstps;!qpjoufs<!!!!!!~!!!!!!$tibsf.cvuupot!/jotubhsbn.jdpo!|!!!!!!!!xjeui;!51qy<!!!!!!!!ifjhiu;!51qy<!!!!!!!!cbdlhspvoe.jnbhf;!vsm)(zpvs.jotubhsbn.jdpo.vsm(*<!!!!!!!!cbdlhspvoe.tj{f;!dpwfs<!!!!!!!!cpsefs.sbejvt;!61&<!!!!!!~!!!!!!$bvejpQmbzfs!|!!!!!!!!nbshjo.upq;!41qy<!!!!!!!!dvstps;!qpjoufs<!!!!!!!!qptjujpo;!sfmbujwf<!!!!!!!!usbotjujpo;!usbotgpsn!1/6t!fbtf.jo.pvu<!!!!!!~!!!!!!$bvejpQmbzfs;ipwfs!|!!!!!!!!usbotgpsn;!tdbmf)2/3*<!!!!!!~!!!!!!$bvejpQmbzfs!jnh!|!!!!!!!!xjeui;!51qy<!!!!!!!!ifjhiu;!51qy<!!!!!!!!cpsefs;!1<!!!!!!~!!!!=0tuzmf?=0ifbe?=cpez?!!!!=i2?Sboepn!Rvsbojd!Wfstf=0i2?!!!!=ejw!je>#cpplnbsltQpqvq#!dmbtt>#qpqvq#?!!!!!!!!=ejw!je>#cpplnbslfeWfstftDpoubjofs#?=0ejw?!!!!!!!!=cvuupo!podmjdl>#ijefCpplnbsltQpqvq)*#?Fyju=0cvuupo?!!!!!!!!=\"..!Bee!b!cvuupo!up!dmfbs!cpplnbslfe!wfstft!..?!!!!!!!!=cvuupo!je>#dmfbsCpplnbsltCvuupo#?Dmfbs!Cpplnbslt=0cvuupo?!!!!=0ejw?!!!!=ejw!je>#vqebuf.tdsffo#?!!!!!!!!=ejw!je>#vqebuf.dpoufou#?!!!!!!!!!!=i3?Ofx!Vqebuf\"=0i3?!!!!!!!!!!=q?cvht!gjyft=0q?!!!!!!!!!!=q?٫چ!٫ٺٰڋڅ!٭ٳ!چڇ!٨څٺٸ٨څ=0q?!!!!!!!!!!=q?=0q?!!!!!!!!!!=q?=0q?!!!!!!!!!!=q?=0q?!!!!!!!!!!=q?=0q?!!!!!!!!!!=q?=0q?!!!!!!!!!!=q?=0q?!!!!!!!!!!=cvuupo!je>#fyju.cvuupo#?Fyju=0cvuupo?!!!!!!!!=0ejw?!!!!!!=0ejw?!!!!=ejw!je>#nfov#!podmjdl>#uphhmfNfov)*#?!!!!!!!!=ejw!je>#nfovBsspx#?\'$96:3<=0ejw?!!!!!!!!=ejw!dmbtt>#nfov.jufnt#!je>#nfovJufnt#?!!!!!!!!!!!!=ejw!dmbtt>#nfov.upq#?!!!!!!!!!!!!!!!!=ejw!dmbtt>#nfov.jufn#?!!!!!!!!!!!!!!!!!!!!=mbcfm!dmbtt>#txjudi#!gps>#uifnfUphhmf#?!!!!!!!!!!!!!!!!!!!!!!!!=joqvu!uzqf>#difdlcpy#!je>#uifnfUphhmf#!podmjdl>#dibohfUifnf)*#?!!!!!!!!!!!!!!!!!!!!!!!!=ejw!dmbtt>#tmjefs!spvoe#?=0ejw?!!!!!!!!!!!!!!!!!!!!=0mbcfm?!!!!!!!!!!!!!!!!!!!!=tqbo!dmbtt>#uphhmf.mbcfm#?Uphhmf!Uifnf=0tqbo?!!!!!!!!!!!!!!!!=0ejw?!!!!!!!!!!!!!!!!=joqvu!uzqf>#sbohf#!njo>#1/9#!nby>#3/1#!tufq>#1/2#!wbmvf>#2/6#!je>#tj{fTmjefs#!pojoqvu>#dibohfWfstfTj{f)uijt/wbmvf*#?!!!!!!!!!!!!!!!!=ejw!dmbtt>#nfov.jufn#!podmjdl>#tipxBcpvu)fwfou*#?Bcpvu=0ejw?!!!!!!!!!!!!=0ejw?!!!!!!!!!!!!=ejw!dmbtt>#nfov.njeemf#?!!!!!!!!!!!!!!!!=cvuupo!je>#tipxCpplnbsltCvuupo#!podmjdl>#tipxCpplnbsltQpqvq)*#?Tipx!Cpplnbslt=0cvuupo?!!!!!!!!!!!!!!!!=mbcfm!gps>#sfdjufsEspqepxo#?Tfmfdu!Sfdjufs;=0mbcfm?!!!!!!!!!!!!!!!!=tfmfdu!je>#sfdjufsEspqepxo#!podibohf>#dibohfSfdjufs)uijt/wbmvf*#?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/bcevmcbtjunvsbuubm#?Bcevm!Cbtju=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/bcevmmbicbtgbs#?Bcevmmbi!Cbtgbs=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/bcevssbinbbotvebjt#?Bcevssbinbbo!Bt.Tvebjt=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/bcevmtbnbe#?Bcevm!Tbnbe=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/tibbusff#?Bcv!Cbls!Bti.Tibbusff=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/binfebkbnz#?Binfe!jco!Bmj!bm.Bkbnz=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/bmbgbtz#?Bmbgbtz=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/ibojsjgbj#?Iboj!Sjgbj=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/ivtbsz#?Ivtbsz=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/ivtbsznvkbxxbe#?Ivtbsz!)Nvkbxxbe*=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/iveibjgz#?Iveibjgz=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/jcsbijnblicbs#?Jcsbijn!Bliebs=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/nbifsnvbjrmz#?Nbifs!Bm!Nvbjrmz=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/njotibxj#?Njotibxj=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/njotibxjnvkbxxbe#?Njotibxz!)Nvkbxxbe*=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/nvibnnbebzzpvc#?Nvibnnbe!Bzzpvc=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/nvibnnbekjcsffm#?Nvibnnbe!Kjcsffm=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/tbppetivsbzn#?Tbppe!cjo!Jcsbbiffn!Bti.Tivsbzn=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#fo/xbml#?Jcsbijn!Xbml=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#gb/ifebzbugbsgppmbewboe#?Gppmbewboe!.!Ifebzbugbs=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/qbsij{hbs#?Qbsij{hbs=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#vs/libo#?Tibntibe!Bmj!Libo=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#{i/dijoftf#?Dijoftf=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#gs/mfdmfsd#?Zpvttpvg!Mfdmfsd=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#bs/bznbotxpbje#?Bznbo!Tpxbje=0pqujpo?!!!!!!!!!!!!!!!!!!!!=pqujpo!wbmvf>#sv/lvmjfw.bvejp#?Fmnjs!Lvmjfw!cz!2NvtmjnBqq=0pqujpo?!!!!!!!!!!!!!!!!=0tfmfdu?!!!!!!!!!!!!!!!!=cvuupo!dmbtt>#nfov.cvuupo#!podmjdl>#uphhmfWfstfPgUifEbzDpoubjofs)*#?Uphhmf!Wfstf!pg!uif!Ebz=0cvuupo?!!!!!!!!!!!!!!!!=mbcfm!gps>#dibohfwpmvnf#?dibohfWpmvnf;=0mbcfm?!!!!!!!!!!!!!!!!=joqvu!uzqf>#sbohf#!njo>#1#!nby>#2#!tufq>#1/2#!wbmvf>#2#!je>#wpmvnfTmjefs#!pojoqvu>#dibohfWpmvnf)uijt/wbmvf*#?!!!!!!!!!!!!!!!!=ejw!dmbtt>#bcpvu.dpoubjofs#!je>#bcpvuDpoubjofs#!podmjdl>#fwfou/tupqQspqbhbujpo)*#?!!!!!!!!!!!!!!!!!!!!=i3?Bcpvu!Uijt!Xfctjuf=0i3?!!!!!!!!!!!!!!!!!!!!=q?Uijt!xfctjuf!qspwjeft!b!sboepn!Rvsbojd!wfstf!bmpoh!xjui!bvejp!sfdjubujpo!boe!usbotmbujpo/!Fyqmpsf!uif!cfbvuz!pg!uif!Rvsbo!uispvhi!sboepn!wfstft/=0q?!!!!!!!!!!!!!!!!!!!!=q?Gps!cvh!sfqpsujoh!ps!gffecbdl-!qmfbtf!dmjdl!uif!cvuupo!cfmpx;=0q?!!!!!!!!!!!!!!!!!!!!=cvuupo!je>#sfqpsuCvhCvuupo#!podmjdl>#sfqpsuCvh)*#?Sfqpsu!Cvh=0cvuupo?!!!!!!!!!!!!!!!!=0ejw?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!=0ejw?!!!!!!!!!!!!=ejw!dmbtt>#nfov.cpuupn#?!!!!!!!!!!!!!!!!=\"..!HjuIvc!jdpo!..?!!!!!!!!!!!!!!!!=b!dmbtt>#nfov.jufn#!isfg>#iuuqt;00hjuivc/dpn0Zb{boljoh#!ubshfu>#`cmbol#?!!!!!!!!!!!!!!!!!!!!=jnh!tsd>#iuuqt;00deo.jdpot.qoh/gmbujdpo/dpn0623036036342/qoh#!bmu>#HjuIvc!Jdpo#?!!!!!!!!!!!!!!!!=0b?!!!!!!!!!!!!!!!!=\"..!Jotubhsbn!jdpo!..?!!!!!!!!!!!!!!!!=b!dmbtt>#nfov.jufn#!isfg>#iuuqt;00xxx/jotubhsbn/dpn02``8z{o0#!ubshfu>#`cmbol#?!!!!!!!!!!!!!!!!!!!!=jnh!tsd>#iuuqt;00deo.jdpot.qoh/gmbujdpo/dpn06230836083644:/qoh#!bmu>#Jotubhsbn!Jdpo#?!!!!!!!!!!!!!!!!=0b?!!!!!!!!!!!!=0ejw?!!!!!!!!=0ejw?!!!!=0ejw?=0cpez?!!!!=ejw!je>#wfstf.dpoubjofs#!ebub.wfstf.sfgfsfodf>##?!!!!!!!!!!!!=ejw!je>#wfstf.dpoufou#?!!!!!!!!!!!!=ejw!je>#wfstf.pg.uif.ebz.dpoubjofs#?!!!!!!!!!!!!!!!!=i3?Wfstf!pg!uif!Ebz=0i3?!!!!!!!!!!!!!!!!=q!je>#wfstf.pg.uif.ebz#?=0q?!!!!!!!!!!!!=0ejw?!!!!!!!!!!!!!!!!!!!!!!!!=ejw!je>#bvejpDpouspm#!podmjdl>#uphhmfBvejp)*#?!!!!!!!!!!!!!!!!=jnh!tsd>#iuuqt;00jnh/jdpot9/dpn0nbufsjbm.spvoefe03501111110tqfblfs/qoh#!bmu>#Bvejp!Dpouspm#?!!!!!!!!!!!!=0ejw?!!!!!!!!!!!!=q!je>#wfstf#?=0q?!!!!!!!!!!!!=q!je>#usbotmbujpo#?=0q?!!!!!!!!!!!!=q!je>#wfstf.ovncfs#?=0q?!!!!!!!!!!!!=cvuupo!je>#cpplnbslCvuupo#!podmjdl>#cpplnbslDvssfouWfstf)*#?Cpplnbsl!Uijt!Wfstf=0cvuupo?!!!!!!!!!!!!=\"..!Bee!uijt!IUNM!gps!uif!qsphsftt!cbs!..?=qsphsftt!je>#qsphsfttCbs#!wbmvf>#1#!nby>#211#?=0qsphsftt?!!!!!!!!=0ejw?!!!!=0ejw?!!!!=tdsjqu?!!!!!!!!mfu!jtNfovWjtjcmf!>!gbmtf<!!!!!!!!mfu!wfstfDibohfUjnfs<!!!!!!!!mfu!jtBvejpQmbzjoh!>!gbmtf<!!!!!!!!mfu!dvssfouBvejpQmbzfs<!!!!!!!!epdvnfou/beeFwfouMjtufofs)#EPNDpoufouMpbefe#-!gvodujpo!)*!|!!!!!!!!!!!!00!Tfu!uif!dvssfou!wfstjpo!ovncfs!!!!!!!!!!!!dpotu!dvssfouWfstjpo!>!#3/6#<!00!Dibohf!uijt!up!zpvs!dvssfou!wfstjpo!!!!!!!!!!!!00!Difdl!jg!uif!vtfs!ibt!tffo!uif!vqebuf!gps!uif!dvssfou!wfstjpo!!!!!!!!!!!!dpotu!ibtTffoVqebufGpsWfstjpo!>!mpdbmTupsbhf/hfuJufn)aibtTffoVqebuf`%|dvssfouWfstjpo~a*<!!!!!!!!!!!!jg!)\"ibtTffoVqebufGpsWfstjpo*!|!!!!!!!!!!!!!!tipxVqebufTdsffo)*<!!!!!!!!!!!!!!00!Tfu!uif!gmbh!jo!mpdbm!tupsbhf!up!joejdbuf!uibu!uif!vtfs!ibt!tffo!uif!vqebuf!gps!uijt!wfstjpo!!!!!!!!!!!!!!mpdbmTupsbhf/tfuJufn)aibtTffoVqebuf`%|dvssfouWfstjpo~a-!#usvf#*<!!!!!!!!!!!!~!!!!00!Gvodujpo!up!ejtqmbz!uif!vqebuf!tdsffo!!!!gvodujpo!tipxVqebufTdsffo)*!|!!!!!!!!dpotu!vqebufTdsffo!>!epdvnfou/hfuFmfnfouCzJe)#vqebuf.tdsffo#*<!!!!!!!!dpotu!fyjuCvuupo!>!epdvnfou/hfuFmfnfouCzJe)#fyju.cvuupo#*<!!!!!!!!vqebufTdsffo/tuzmf/ejtqmbz!>!#gmfy#<!!!!!!!!00!Bee!fwfou!mjtufofs!up!fyju!cvuupo!!!!!!!!fyjuCvuupo/beeFwfouMjtufofs)#dmjdl#-!gvodujpo!)*!|!!!!!!!!!!!!vqebufTdsffo/tuzmf/ejtqmbz!>!#opof#<!!!!!!!!~*<!!!!~~*<btzod!gvodujpo!gfudiWfstf)wfstfOvncfs*!|!!!!usz!|!!!!!!!!dpotu!wfstfEbub!>!bxbju!hfuWfstfEbub)wfstfOvncfs*<!!!!!!!!dpotu!usbotmbujpoEbub!>!bxbju!hfuUsbotmbujpoEbub)wfstfOvncfs*<!!!!!!!!dpotu!bvejpVsm!>!bxbju!hfuBvejpVsm)wfstfOvncfs*<!!!!!!!!vqebufWfstfVJ)wfstfEbub/ufyu-!usbotmbujpoEbub/ufyu-!wfstfEbub/ovncfs*<!!!!!!!!tfuWfstfSfgfsfodf)wfstfEbub/ovncfs*<!!!!!!!!qmbzBvejpJoufsobm)bvejpVsm*<!!!!!!!!sfuvso!bvejpVsm<!!!!~!dbudi!)fssps*!|!!!!!!!!iboemfFsspst)fssps-!(Fssps!gfudijoh!wfstf;(*<!!!!~~!!!!!!!!!!!!dpotu!WFSTF`PG`UIF`EBZ`JOUFSWBM!>!35!+!71!+!71!+!2111<!!!!!!!!xjoepx/pompbe!>!btzod!)*!>?!|!!!!!!!!!!!!bxbju!gfudiWfstf)*<!!!!!!!!!!!!tubsuWfstfDibohfUjnfs)*<!!!!!!!!!!!!gfudiSboepnWfstfPgUifEbz)*<!!!!!!!!!!!!00!Bee!uijt!mjof!up!gfudi!uif!Wfstf!pg!uif!Ebz!!!!!!!!~<!!!!!!!!00!Bee!uijt!mjof!up!gfudi!uif!Wfstf!pg!uif!Ebz!po!b!tqfdjgjfe!joufswbm!!!!!!!!tfuJoufswbm)gfudiSboepnWfstfPgUifEbz-!WFSTF`PG`UIF`EBZ`JOUFSWBM*<!!!!!!!!gvodujpo!tipxBcpvu)fwfou*!|!!!!!!!!!!!!fwfou/tupqQspqbhbujpo)*<!00!Qsfwfou!uif!fwfou!gspn!sfbdijoh!uif!epdvnfou!!!!!!!!!!!!dpotu!bcpvuDpoubjofs!>!epdvnfou/hfuFmfnfouCzJe)#bcpvuDpoubjofs#*<!!!!!!!!!!!!bcpvuDpoubjofs/tuzmf/ejtqmbz!>!)bcpvuDpoubjofs/tuzmf/ejtqmbz!>>>!#cmpdl#*!@!#opof#!;!#cmpdl#<!!!!!!!!~!!!!!!!!gvodujpo!sfqpsuCvh)*!|!!!!!!!!!!!!00!Sfejsfdu!up!zpvs!Jotubhsbn!bddpvou!!!!!!!!!!!!xjoepx/mpdbujpo/isfg!>!#iuuqt;00xxx/jotubhsbn/dpn02``8z{o0#<!!!!!!!!~!!!!!!!!!!!!!!!!gvodujpo!uphhmfWfstfPgUifEbzDpoubjofs)*!|!!!!!!!!!!!!dpotu!wfstfPgUifEbzDpoubjofs!>!epdvnfou/hfuFmfnfouCzJe)(wfstf.pg.uif.ebz.dpoubjofs(*<!!!!!!!!!!!!jg!)wfstfPgUifEbzDpoubjofs/tuzmf/ejtqmbz!>>>!(opof(!}}!\"wfstfPgUifEbzDpoubjofs/tuzmf/ejtqmbz*!|!!!!!!!!!!!!!!!!wfstfPgUifEbzDpoubjofs/tuzmf/ejtqmbz!>!(cmpdl(<!!!!!!!!!!!!~!fmtf!|!!!!!!!!!!!!!!!!wfstfPgUifEbzDpoubjofs/tuzmf/ejtqmbz!>!(opof(<!!!!!!!!!!!!~!!!!!!!!~!!!!!!!!dpotu!BQJ`CBTF`VSM!>!(iuuqt;00bqj/bmrvsbo/dmpve0w20bzbi(<!!!!!!!!dpotu!FEJUJPO`JEFOUJGJFS!>!(bs/bmg(<!00!Efgbvmu!fejujpo!jefoujgjfs!!!!!!!!mfu!FEJUJPOT!>!(bs/Bmbgbtz(<!!!!!!!!dpotu!USBOTMBUJPO`FEJUJPOT!>!(fo/tbiji(<!!!!!!!!!!!!!!!!dpotu!WFSTF`DIBOHF`JOUFSWBM!>!21111<!!!!!!!!btzod!gvodujpo!gfudiWfstf)wfstfOvncfs*!|!!!!!!!!!!!!usz!|!!!!!!!!!!!!!!!!jg!)\"wfstfOvncfs*!|!!!!!!!!!!!!!!!!!!!!wfstfOvncfs!>!hfuSboepnWfstfOvncfs)*<!!!!!!!!!!!!!!!!~!!!!!!!!!!!!!!!!dpotu!wfstfEbub!>!bxbju!hfuWfstfEbub)wfstfOvncfs*<!!!!!!!!!!!!!!!!dpotu!usbotmbujpoEbub!>!bxbju!hfuUsbotmbujpoEbub)wfstfOvncfs*<!!!!!!!!!!!!!!!!vqebufWfstfVJ)wfstfEbub/ufyu-!usbotmbujpoEbub/ufyu-!wfstfEbub/ovncfs*<!!!!!!!!!!!!!!!!tfuWfstfSfgfsfodf)wfstfEbub/ovncfs*<!!!!!!!!!!!!!!!!sfuvso!wfstfEbub/bvejp<!!!!!!!!!!!!~!dbudi!)fssps*!|!!!!!!!!!!!!!!!!iboemfFsspst)fssps-!(Fssps!gfudijoh!wfstf;(*<!!!!!!!!!!!!~!!!!!!!!~!!!!!!!!btzod!gvodujpo!hfuUsbotmbujpoEbub)wfstfOvncfs*!|!!!!!!!!!!!!dpotu!sftqpotf!>!bxbju!byjpt/hfu)a%|BQJ`CBTF`VSM~0%|wfstfOvncfs~0%|USBOTMBUJPO`FEJUJPOT~a*<!!!!!!!!!!!!sfuvso!sftqpotf/ebub/ebub<!!!!!!!!~!!!!!!!!btzod!gvodujpo!qmbzBvejpJoufsobm)bvejpVsm*!|!!!!!!!!!!!!dpotu!bvejpQmbzfs!>!ofx!Bvejp)bvejpVsm*<!!!!!!!!!!!!bvejpQmbzfs/beeFwfouMjtufofs)(foefe(-!)*!>?!|!!!!!!!!!!!!!!!!jtBvejpQmbzjoh!>!gbmtf<!!!!!!!!!!!!!!!!tfuUjnfpvu))*!>?!|!!!!!!!!!!!!!!!!!!!!tubsuWfstfDibohfUjnfs)*<!!!!!!!!!!!!!!!!~-!1*<!00!Vtf!tfuUjnfpvu!up!bmmpx!uif!fwfou!mppq!up!dmfbs!!!!!!!!!!!!~*<!!!!!!!!!!!!bvejpQmbzfs/qmbz)*<!!!!!!!!~!!!!!!!!gvodujpo!qmbzBvejpJoufsobm)bvejpVsm*!|!!!!!!!!!!!!dpotu!bvejpQmbzfs!>!ofx!Bvejp)bvejpVsm*<!!!!!!!!!!!!bvejpQmbzfs/qmbz)*<!!!!!!!!!!!!bvejpQmbzfs/beeFwfouMjtufofs)(foefe(-!)*!>?!|!!!!!!!!!!!!!!!!jtBvejpQmbzjoh!>!gbmtf<!!!!!!!!!!!!!!!!jg!)wfstfDibohfUjnfs*!|!!!!!!!!!!!!!!!!!!!!dmfbsJoufswbm)wfstfDibohfUjnfs*<!!!!!!!!!!!!!!!!!!!!tubsuWfstfDibohfUjnfs)*<!00!Tubsu!b!ofx!ujnfs!bgufs!dmfbsjoh!uif!fyjtujoh!pof!!!!!!!!!!!!!!!!~!!!!!!!!!!!!~*<!!!!!!!!~!!!!!!!!btzod!gvodujpo!hfuWfstfEbub)wfstfOvncfs*!|!!!!!!!!!!!!dpotu!sftqpotf!>!bxbju!byjpt/hfu)a%|BQJ`CBTF`VSM~0%|wfstfOvncfs~0%|FEJUJPOT~a*<!!!!!!!!!!!!sfuvso!sftqpotf/ebub/ebub<!!!!!!!!~!!!!!!!!btzod!gvodujpo!hfuBvejpVsm)*!|!!!!!!!!!!!!dpotu!wfstfDpoubjofs!>!epdvnfou/hfuFmfnfouCzJe)(wfstf.dpoubjofs(*<!!!!!!!!!!!!dpotu!wfstfSfgfsfodf!>!wfstfDpoubjofs/ebubtfu/wfstfSfgfsfodf<!!!!!!!!!!!!jg!)wfstfSfgfsfodf*!|!!!!!!!!!!!!!!!!dpotu!sftqpotf!>!bxbju!byjpt/hfu)a%|BQJ`CBTF`VSM~0%|wfstfSfgfsfodf~0fejujpot0%|FEJUJPOT~a*<!!!!!!!!!!!!!!!!sfuvso!sftqpotf/ebub/ebub\\1^/bvejp<!!!!!!!!!!!!~!fmtf!|!!!!!!!!!!!!!!!!uispx!ofx!Fssps)(Wfstf!sfgfsfodf!jt!voefgjofe/(*<!!!!!!!!!!!!~!!!!!!!!~!!!!!!!!btzod!gvodujpo!vqebufWfstfVJ)wfstfUfyu-!usbotmbujpoUfyu-!wfstfOvncfs*!|!!!!!!!!!!!!dpotu!wfstfFmfnfou!>!epdvnfou/hfuFmfnfouCzJe)(wfstf(*<!!!!!!!!!!!!dpotu!usbotmbujpoFmfnfou!>!epdvnfou/hfuFmfnfouCzJe)(usbotmbujpo(*<!!!!!!!!!!!!dpotu!wfstfOvncfsFmfnfou!>!epdvnfou/hfuFmfnfouCzJe)(wfstf.ovncfs(*<!!!!!!!!!!!!00!Dmfbs!qsfwjpvt!dpoufou!!!!!!!!!!!!wfstfFmfnfou/joofsIUNM!>!((<!!!!!!!!!!!!usbotmbujpoFmfnfou/joofsIUNM!>!((<!!!!!!!!!!!!wfstfOvncfsFmfnfou/joofsIUNM!>!((<!!!!!!!!!!!!00!Ejtqmbz!wfstf!ufyu!boe!usbotmbujpo!!!!!!!!!!!!wfstfFmfnfou/joofsIUNM!>!a=tuspoh?%|wfstfUfyu~=0tuspoh?a<!!!!!!!!!!!!usbotmbujpoFmfnfou/joofsIUNM!>!usbotmbujpoUfyu<!!!!!!!!!!!!00!Ejtqmbz!wfstf!ovncfs!vtjoh!uif!qspwjefe!dpef!!!!!!!!!!!!wfstfOvncfsFmfnfou/joofsUfyu!>!aBZBI!%|wfstfOvncfs~a<!!!!!!!!~!!!!!!!!gvodujpo!iboemfFsspst)fssps-!nfttbhf*!|!!!!!!!!!!!!dpotpmf/fssps)a%|nfttbhf~!%|fssps~a*<!!!!!!!!~!!!!!!!!btzod!gvodujpo!qmbzBvejpJoufsobm)bvejpQmbzfs*!|!!!!!!!!!!!!usz!|!!!!!!!!!!!!!!!!dpotu!bvejpVsm!>!bxbju!hfuBvejpVsm)*<!!!!!!!!!!!!!!!!00!Dmfbs!uif!fyjtujoh!ujnfs!jg!ju!fyjtut!!!!!!!!!!!!!!!!dmfbsJoufswbm)wfstfDibohfUjnfs*<!!!!!!!!!!!!!!!!00!Tfu!uif!dvssfou!bvejp!qmbzfs!!!!!!!!!!!!!!!!dvssfouBvejpQmbzfs!>!bvejpQmbzfs<!!!!!!!!!!!!!!!!00!Bee!qsphsftt!cbs!!!!!!!!!!!!!!!!dpotu!qsphsfttCbs!>!epdvnfou/hfuFmfnfouCzJe)(qsphsfttCbs(*<!!!!!!!!!!!!!!!!qsphsfttCbs/tuzmf/ejtqmbz!>!(cmpdl(<!!!!!!!!!!!!!!!!00!Vqebuf!qsphsftt!cbs!ezobnjdbmmz!!!!!!!!!!!!!!!!bvejpQmbzfs/beeFwfouMjtufofs)(ujnfvqebuf(-!)*!>?!|!!!!!!!!!!!!!!!!!!!!dpotu!qfsdfoubhf!>!)bvejpQmbzfs/dvssfouUjnf!0!bvejpQmbzfs/evsbujpo*!+!211<!!!!!!!!!!!!!!!!!!!!qsphsfttCbs/wbmvf!>!qfsdfoubhf<!!!!!!!!!!!!!!!!~*<!!!!!!!!!!!!!!!!00!Bee!fwfou!mjtufofs!gps!xifo!uif!bvejp!foet!!!!!!!!!!!!!!!!bvejpQmbzfs/beeFwfouMjtufofs)(foefe(-!)*!>?!|!!!!!!!!!!!!!!!!!!!!jtBvejpQmbzjoh!>!gbmtf<!00!Tfu!uif!gmbh!up!joejdbuf!uibu!bvejp!jt!opu!qmbzjoh!!!!!!!!!!!!!!!!!!!!00!Tubsu!b!ofx!ujnfs!up!dibohf!uif!wfstf!bgufs!b!sftu!joufswbm!!!!!!!!!!!!!!!!!!!!wfstfDibohfUjnfs!>!tfuJoufswbm))*!>?!|!!!!!!!!!!!!!!!!!!!!!!!!dpotu!sboepnWfstfOvncfs!>!hfuSboepnWfstfOvncfs)*<!!!!!!!!!!!!!!!!!!!!!!!!gfudiWfstf)sboepnWfstfOvncfs*<!!!!!!!!!!!!!!!!!!!!~-!WFSTF`DIBOHF`JOUFSWBM*<!!!!!!!!!!!!!!!!!!!!00!Ijef!uif!qsphsftt!cbs!!!!!!!!!!!!!!!!!!!!qsphsfttCbs/tuzmf/ejtqmbz!>!(opof(<!!!!!!!!!!!!!!!!~*<!!!!!!!!!!!!!!!!00!Tfu!uif!bvejp!tpvsdf!boe!qmbz!!!!!!!!!!!!!!!!bvejpQmbzfs/tsd!>!bvejpVsm<!!!!!!!!!!!!!!!!bvejpQmbzfs/qmbz)*<!!!!!!!!!!!!!!!!jtBvejpQmbzjoh!>!usvf<!00!Tfu!uif!gmbh!up!joejdbuf!uibu!bvejp!jt!qmbzjoh!!!!!!!!!!!!~!dbudi!)fssps*!|!!!!!!!!!!!!!!!!iboemfFsspst)fssps-!(Fssps!qmbzjoh!bvejp;(*<!!!!!!!!!!!!~!!!!!!!!~!!!!!!!!gvodujpo!tubsuWfstfDibohfUjnfs)*!|!!!!!!!!!!!!00!Tubsu!uif!jojujbm!ujnfs!up!dibohf!uif!wfstf!fwfsz!21!tfdpoet!!!!!!!!!!!!wfstfDibohfUjnfs!>!tfuJoufswbm))*!>?!|!!!!!!!!!!!!!!!!jg!)\"jtBvejpQmbzjoh*!|!!!!!!!!!!!!!!!!!!!!dpotu!sboepnWfstfOvncfs!>!hfuSboepnWfstfOvncfs)*<!!!!!!!!!!!!!!!!!!!!gfudiWfstf)sboepnWfstfOvncfs*<!!!!!!!!!!!!!!!!~!!!!!!!!!!!!~-!WFSTF`DIBOHF`JOUFSWBM*<!!!!!!!!~!!!!!!!!gvodujpo!uphhmfBvejp)*!|!!!!!!!!!!!!jg!)jtBvejpQmbzjoh*!|!!!!!!!!!!!!!!!!00!Jg!bvejp!jt!bmsfbez!qmbzjoh-!ep!opuijoh!!!!!!!!!!!!!!!!sfuvso<!!!!!!!!!!!!~!fmtf!|!!!!!!!!!!!!!!!!00!Jg!bvejp!jt!opu!qmbzjoh-!qmbz!ju!!!!!!!!!!!!!!!!jtBvejpQmbzjoh!>!usvf<!!!!!!!!!!!!!!!!dpotu!bvejpQmbzfs!>!ofx!Bvejp)*<!!!!!!!!!!!!!!!!qmbzBvejpJoufsobm)bvejpQmbzfs*<!!!!!!!!!!!!~!!!!!!!!~!!!!!!!!gvodujpo!hfuSboepnWfstfOvncfs)dvssfouWfstfOvncfs*!|!!!!!!!!!!!!mfu!sboepnWfstfOvncfs<!!!!!!!!!!!!ep!|!!!!!!!!!!!!!!!!sboepnWfstfOvncfs!>!Nbui/gmpps)Nbui/sboepn)*!+!225!,!2*<!!!!!!!!!!!!~!xijmf!)sboepnWfstfOvncfs!>>>!dvssfouWfstfOvncfs*<!!!!!!!!!!!!sfuvso!sboepnWfstfOvncfs<!!!!!!!!~!!!!!!!!gvodujpo!tfuWfstfSfgfsfodf)wfstfSfgfsfodf*!|!!!!!!!!!!!!dpotu!wfstfDpoubjofs!>!epdvnfou/hfuFmfnfouCzJe)(wfstf.dpoubjofs(*<!!!!!!!!!!!!wfstfDpoubjofs/ebubtfu/wfstfSfgfsfodf!>!wfstfSfgfsfodf<!!!!!!!!~!!!!!!!!gvodujpo!uphhmfNfov)*!|!!!!!!!!!!!!dpotu!nfovJufnt!>!epdvnfou/hfuFmfnfouCzJe)(nfovJufnt(*<!!!!!!!!!!!!jg!)\"jtNfovWjtjcmf*!|!!!!!!!!!!!!!!!!tipxNfov)*<!!!!!!!!!!!!~!fmtf!|!!!!!!!!!!!!!!!!ijefNfov)*<!!!!!!!!!!!!~!!!!!!!!~!!!!!!!!gvodujpo!dibohfUifnf)*!|!!!!!!!!!!!!dpotu!cpez!>!epdvnfou/cpez<!!!!!!!!!!!!cpez/dmbttMjtu/uphhmf)(ebsl.uifnf(*<!!!!!!!!!!~!!!!!!!!gvodujpo!dibohfWfstfTj{f)tj{f*!|!!!!!!!!!!!!dpotu!wfstfFmfnfou!>!epdvnfou/hfuFmfnfouCzJe)(wfstf(*<!!!!!!!!!!!!wfstfFmfnfou/tuzmf/gpouTj{f!>!a%|tj{f~fna<!!!!!!!!~!!!!!!!!mfu!tubsuY!>!1<!!!!!!!!epdvnfou/beeFwfouMjtufofs)(upvditubsu(-!iboemfUpvdiTubsu-!gbmtf*<!!!!!!!!epdvnfou/beeFwfouMjtufofs)(upvdinpwf(-!iboemfUpvdiNpwf-!gbmtf*<!!!!!!!!gvodujpo!iboemfUpvdiTubsu)fwfou*!|!!!!!!!!!!!!tubsuY!>!fwfou/upvdift\\1^/dmjfouY<!!!!!!!!~!!!!!!!!gvodujpo!iboemfUpvdiNpwf)fwfou*!|!!!!!!!!!!!!jg!)\"tubsuY*!sfuvso<!!!!!!!!!!!!dpotu!dvssfouY!>!fwfou/upvdift\\1^/dmjfouY<!!!!!!!!!!!!dpotu!efmubY!>!tubsuY!.!dvssfouY<!00!Bekvtufe!gps!sjhiu!txjqf!!!!!!!!!!!!00!Bekvtu!uijt!wbmvf!cbtfe!po!uif!uisftipme!gps!txjqf!up!tipx!uif!nfov!!!!!!!!!!!!dpotu!txjqfUisftipme!>!61<!!!!!!!!!!!!00!Difdl!gps!tnbmmfs!tdsffo!xjeui!)bekvtu!uif!wbmvf!cbtfe!po!zpvs!offet*!!!!!!!!!!!!dpotu!jtNpcjmf!>!xjoepx/joofsXjeui!=>!879<!!!!!!!!!!!!jg!)jtNpcjmf!\'\'!efmubY!?!txjqfUisftipme*!|!!!!!!!!!!!!!!!!tipxNfov)*<!!!!!!!!!!!!!!!!tubsuY!>!1<!00!Sftfu!tubsuY!up!qsfwfou!dpoujovpvt!usjhhfsjoh!!!!!!!!!!!!~!!!!!!!!~!!!!!!!!gvodujpo!tipxNfov)*!|!!!!!!!!!!!!dpotu!nfovJufnt!>!epdvnfou/hfuFmfnfouCzJe)(nfovJufnt(*<!!!!!!!!!!!!nfovJufnt/tuzmf/xjeui!>!(61&(<!00!Bekvtu!uif!xjeui!cbtfe!po!zpvs!qsfgfsfodf!!!!!!!!!!!!nfovJufnt/tuzmf/sjhiu!>!(1(<!!!!!!!!!!!!jtNfovWjtjcmf!>!usvf<!!!!!!!!!!!!epdvnfou/hfuFmfnfouCzJe)(nfovBsspx(*/dmbttMjtu/bee)(bsspx.spubuf(*<!!!!!!!!~!!!!!!!!gvodujpo!ijefNfov)*!|!!!!!!!!!!!!dpotu!nfovJufnt!>!epdvnfou/hfuFmfnfouCzJe)(nfovJufnt(*<!!!!!!!!!!!!nfovJufnt/tuzmf/xjeui!>!(1(<!!!!!!!!!!!!nfovJufnt/tuzmf/sjhiu!>!(.61&(<!!!!!!!!!!!!jtNfovWjtjcmf!>!gbmtf<!!!!!!!!!!!!epdvnfou/hfuFmfnfouCzJe)(nfovBsspx(*/dmbttMjtu/sfnpwf)(bsspx.spubuf(*<!!!!!!!!~!!!!!!!!00!Qsfwfou!uif!nfov!gspn!dmptjoh!xifo!joufsbdujoh!xjui!jut!dpoufou!!!!!!!!epdvnfou/hfuFmfnfouCzJe)(nfovJufnt(*/beeFwfouMjtufofs)(dmjdl(-!gvodujpo!)fwfou*!|!!!!!!!!!!!!fwfou/tupqQspqbhbujpo)*<!00!Qsfwfou!uif!dmjdl!fwfou!gspn!qspqbhbujoh!up!epdvnfou!!!!!!!!~*<!!!!!!!!00!Dmptf!uif!nfov!jg!uif!vtfs!dmjdlt!pvutjef!uif!nfov!!!!!!!!epdvnfou/beeFwfouMjtufofs)(dmjdl(-!gvodujpo!)fwfou*!|!!!!!!!!!!!!dpotu!nfov!>!epdvnfou/hfuFmfnfouCzJe)(nfov(*<!!!!!!!!!!!!jg!)jtNfovWjtjcmf!\'\'!\"nfov/dpoubjot)fwfou/ubshfu**!|!!!!!!!!!!!!!!!!ijefNfov)*<!!!!!!!!!!!!~!!!!!!!!~*<!!!!!!!!btzod!gvodujpo!gfudiSboepnWfstfPgUifEbz)*!|!!!!!!!!!!!!usz!|!!!!!!!!!!!!!!!!00!Gfudi!uif!upubm!ovncfs!pg!Bzbit!)wfstft*!bwbjmbcmf!!!!!!!!!!!!!!!!dpotu!upubmBzbit!>!7347<!!00!Vqebuf!uijt!jg!uif!bduvbm!upubm!ovncfs!jt!ejggfsfou!!!!!!!!!!!!!!!!00!Hfofsbuf!b!sboepn!Bzbi!ovncfs!!!!!!!!!!!!!!!!dpotu!sboepnBzbiOvncfs!>!Nbui/gmpps)Nbui/sboepn)*!+!upubmBzbit*!,!2<!!!!!!!!!!!!!!!!00!Tqfdjgz!uif!Bzbi!ovncfs!jo!uif!sfrvftu!!!!!!!!!!!!!!!!dpotu!sftqpotf!>!bxbju!byjpt/hfu)a%|BQJ`CBTF`VSM~0%|sboepnBzbiOvncfs~0%|FEJUJPOT~a*<!!!!!!!!!!!!!!!!dpotu!wfstfEbub!>!sftqpotf/ebub/ebub<!!!!!!!!!!!!!!!!jg!)wfstfEbub!\'\'!wfstfEbub/ufyu*!|!!!!!!!!!!!!!!!!!!!!dpotu!wfstfPgUifEbzFmfnfou!>!epdvnfou/hfuFmfnfouCzJe)(wfstf.pg.uif.ebz(*<!!!!!!!!!!!!!!!!!!!!00!Ejtqmbz!uif!Wfstf!pg!uif!Ebz!xjui!Bzbi!ovncfs!!!!!!!!!!!!!!!!!!!!wfstfPgUifEbzFmfnfou/joofsIUNM!>!a=tuspoh?%|wfstfEbub/ufyu~=0tuspoh?=cs?BZBI!%|sboepnBzbiOvncfs~a<!!!!!!!!!!!!!!!!~!fmtf!|!!!!!!!!!!!!!!!!!!!!uispx!ofx!Fssps)(Jowbmje!sftqpotf!gpsnbu!gps!Wfstf!pg!uif!Ebz/!Wfstf!ebub!opu!bwbjmbcmf/(*<!!!!!!!!!!!!!!!!~!!!!!!!!!!!!~!dbudi!)fssps*!|!!!!!!!!!!!!!!!!dpotpmf/fssps)(Fssps!gfudijoh!Wfstf!pg!uif!Ebz;(-!fssps*<!!!!!!!!!!!!!!!!00!Pqujpobmmz-!zpv!dbo!ejtqmbz!b!nfttbhf!up!uif!vtfs!joejdbujoh!uif!gbjmvsf/!!!!!!!!!!!!!!!!dpotu!wfstfPgUifEbzFmfnfou!>!epdvnfou/hfuFmfnfouCzJe)(wfstf.pg.uif.ebz(*<!!!!!!!!!!!!!!!!wfstfPgUifEbzFmfnfou/joofsIUNM!>!aGbjmfe!up!gfudi!Wfstf!pg!uif!Ebz/!Qmfbtf!difdl!uif!dpotpmf!gps!efubjmt/a<!!!!!!!!!!!!~!!!!!!!!~!!!!!!!!gvodujpo!tipxWpmvnfTmjefs)*!|!!!!!!!!!!!!dpotu!wpmvnfTmjefsDpoubjofs!>!epdvnfou/hfuFmfnfouCzJe)(wpmvnfTmjefsDpoubjofs(*<!!!!!!!!!!!!wpmvnfTmjefsDpoubjofs/tuzmf/ejtqmbz!>!(cmpdl(<!!!!!!!!~gvodujpo!dibohfWpmvnf)wpmvnf*!|!!!!dpotu!bvejpQmbzfst!>!epdvnfou/rvfszTfmfdupsBmm)($wfstf.dpoubjofs!bvejp(*<!!!!bvejpQmbzfst/gpsFbdi))bvejpQmbzfs*!>?!|!!!!!!!!bvejpQmbzfs/wpmvnf!>!wpmvnf<!!!!~*<~!!!!!!!!!!!!!!!00!Bee!uijt!gvodujpo!up!uphhmf!uif!sfdjufs!mjtu!!!!!!!!gvodujpo!uphhmfSfdjufsMjtu)*!|!!!!!!!!!!!!dpotu!sfdjufsMjtu!>!epdvnfou/hfuFmfnfouCzJe)(sfdjufsMjtu(*<!!!!!!!!!!!!jg!)sfdjufsMjtu/tuzmf/ejtqmbz!>>>!(opof(!}}!\"sfdjufsMjtu/tuzmf/ejtqmbz*!|!!!!!!!!!!!!!!!!sfdjufsMjtu/tuzmf/ejtqmbz!>!(cmpdl(<!!!!!!!!!!!!~!fmtf!|!!!!!!!!!!!!!!!!sfdjufsMjtu/tuzmf/ejtqmbz!>!(opof(<!!!!!!!!!!!!~!!!!!!!!~!!!!!!!!00!Bee!uijt!gvodujpo!up!dibohf!uif!sfdjufs!boe!gfudi!uif!wfstf!!!!!!!!gvodujpo!dibohfSfdjufs)sfdjufsJefoujgjfs*!|!!!!!!!!!!!!FEJUJPOT!>!sfdjufsJefoujgjfs<!!!!!!!!!!!!00!Gfudi!uif!wfstf!xjui!uif!tfmfdufe!sfdjufs!!!!!!!!!!!!00gfudiWfstf)hfuSboepnWfstfOvncfs)**<!!!!!!!!~!!!!!!!!wbs!psjhjobmCbdlhspvoeJnbhf!>!(vsm)iuuqt;00xjotupodivsdijmm/ijmmtebmf/fev0xq.dpoufou0vqmpbet0312701404966738697`5ec7:55g5f`p.951y541/kqh*(<!!!!!!!!gvodujpo!dibohfUifnf)*!|!!!!!!!!!!!!wbs!cpez!>!epdvnfou/cpez<!!!!!!!!!!!!wbs!nfov!>!epdvnfou/hfuFmfnfouCzJe)(nfov(*<!!!!!!!!!!!!wbs!vqebufTdsffo!>!epdvnfou/hfuFmfnfouCzJe)(vqebuf.tdsffo(*<!!!!!!!!!!!!00!Uphhmf!ebsl!npef!dmbtt!po!cpez!!!!!!!!!!!!cpez/dmbttMjtu/uphhmf)(ebsl.npef(*<!!!!!!!!!!!!00!Uphhmf!ebsl!npef!dmbtt!po!nfov!!!!!!!!!!!!nfov/dmbttMjtu/uphhmf)(ebsl.npef(*<!!!!!!!!!!!!00!Uphhmf!ebsl!npef!dmbtt!po!vqebuf!tdsffo!!!!!!!!!!!!vqebufTdsffo/dmbttMjtu/uphhmf)(ebsl.npef(*<!!!!!!!!!!!!00!Beejujpobm!tuzmjoh!gps!tqfdjgjd!fmfnfout!)bekvtu!bt!offefe*!!!!!!!!!!!!jg!)cpez/dmbttMjtu/dpoubjot)(ebsl.npef(**!|!!!!!!!!!!!!!!!!00!Ebsl!npef!!!!!!!!!!!!!!!!cpez/tuzmf/cbdlhspvoeDpmps!>!($111(<!!!!!!!!!!!!!!!!cpez/tuzmf/cbdlhspvoeJnbhf!>!(opof(<!!!!!!!!!!!!!!!!00!Tfu!ufyu!dpmps!up!xijuf!!!!!!!!!!!!!!!!cpez/tuzmf/dpmps!>!($ggg(<!!!!!!!!!!!!!!!!00!Beejujpobm!tuzmjoh!gps!puifs!fmfnfout!!!!!!!!!!!!~!fmtf!|!!!!!!!!!!!!!!!!00!Mjhiu!npef!)sfwfsujoh!up!psjhjobm!cbdlhspvoe*!!!!!!!!!!!!!!!!cpez/tuzmf/cbdlhspvoeDpmps!>!((<!!!!!!!!!!!!!!!!cpez/tuzmf/cbdlhspvoeJnbhf!>!psjhjobmCbdlhspvoeJnbhf<!!!!!!!!!!!!!!!!00!Tfu!ufyu!dpmps!up!psjhjobm!dpmps!)f/h/-!cmbdl*!!!!!!!!!!!!!!!!cpez/tuzmf/dpmps!>!($111(<!00!Sfqmbdf!xjui!zpvs!psjhjobm!ufyu!dpmps!!!!!!!!!!!!!!!!00!Beejujpobm!tuzmjoh!gps!puifs!fmfnfout!!!!!!!!!!!!~!!!!!!!!~!!!!!!!!gvodujpo!dibohfWpmvnf)wpmvnf*!|!!!!!!!!!!!!jg!)dvssfouBvejpQmbzfs*!|!!!!!!!!!!!!!!!!dvssfouBvejpQmbzfs/wpmvnf!>!wpmvnf<!!!!!!!!!!!!~!!!!!!!!~!!!!!!!!mfu!cpplnbslfeWfstft!>!\\^<!00!Bssbz!up!tupsf!cpplnbslfe!wfstftgvodujpo!cpplnbslDvssfouWfstf)*!|!!!!dpotu!wfstfDpoubjofs!>!epdvnfou/hfuFmfnfouCzJe)(wfstf.dpoubjofs(*<!!!!dpotu!wfstfSfgfsfodf!>!wfstfDpoubjofs/ebubtfu/wfstfSfgfsfodf<!!!!dpotu!wfstfUfyu!>!epdvnfou/hfuFmfnfouCzJe)(wfstf(*/joofsIUNM<!!!!dpotu!usbotmbujpoUfyu!>!epdvnfou/hfuFmfnfouCzJe)(usbotmbujpo(*/joofsIUNM<!!!!00!Difdl!jg!uif!wfstf!jt!bmsfbez!cpplnbslfe!!!!jg!)\"jtWfstfCpplnbslfe)wfstfSfgfsfodf**!|!!!!!!!!00!Bee!uif!dvssfou!wfstf!up!uif!cpplnbslt!bssbz!!!!!!!!cpplnbslfeWfstft/qvti)|!!!!!!!!!!!!wfstfSfgfsfodf-!!!!!!!!!!!!wfstfUfyu-!!!!!!!!!!!!usbotmbujpoUfyu!!!!!!!!~*<!!!!!!!!00!Pqujpobmmz-!zpv!dbo!tbwf!uif!cpplnbslt!bssbz!up!mpdbm!tupsbhf!gps!qfstjtufodf!!!!!!!!tbwfCpplnbsltUpMpdbmTupsbhf)*<!!!!!!!!00!Qspwjef!gffecbdl!up!uif!vtfs!)zpv!dbo!dvtupnj{f!uijt!qbsu*!!!!!!!!bmfsu)(Wfstf!cpplnbslfe!tvddfttgvmmz\"(*<!!!!~!fmtf!|!!!!!!!!00!Uif!wfstf!jt!bmsfbez!cpplnbslfe!!!!!!!!bmfsu)(Wfstf!jt!bmsfbez!cpplnbslfe\"(*<!!!!~~gvodujpo!jtWfstfCpplnbslfe)wfstfSfgfsfodf*!|!!!!00!Difdl!jg!uif!wfstf!jt!bmsfbez!cpplnbslfe!!!!sfuvso!cpplnbslfeWfstft/tpnf)wfstf!>?!wfstf/wfstfSfgfsfodf!>>>!wfstfSfgfsfodf*<~gvodujpo!tbwfCpplnbsltUpMpdbmTupsbhf)*!|!!!!00!Tbwf!uif!cpplnbslt!bssbz!up!mpdbm!tupsbhf!!!!mpdbmTupsbhf/tfuJufn)(cpplnbslfeWfstft(-!KTPO/tusjohjgz)cpplnbslfeWfstft**<~gvodujpo!mpbeCpplnbsltGspnMpdbmTupsbhf)*!|!!!!00!Mpbe!cpplnbslt!gspn!mpdbm!tupsbhf!xifo!uif!qbhf!mpbet!!!!dpotu!tupsfeCpplnbslt!>!mpdbmTupsbhf/hfuJufn)(cpplnbslfeWfstft(*<!!!!jg!)tupsfeCpplnbslt*!|!!!!!!!!cpplnbslfeWfstft!>!KTPO/qbstf)tupsfeCpplnbslt*<!!!!~~gvodujpo!vqebufCpplnbslfeWfstftDpoubjofs)*!|!!!!dpotu!dpoubjofs!>!epdvnfou/hfuFmfnfouCzJe)(cpplnbslfeWfstftDpoubjofs(*<!!!!dpoubjofs/joofsIUNM!>!((<!!!!cpplnbslfeWfstft/gpsFbdi)wfstf!>?!|!!!!!!!!dpotu!wfstfFmfnfou!>!epdvnfou/dsfbufFmfnfou)(ejw(*<!!!!!!!!wfstfFmfnfou/joofsIUNM!>!a=tuspoh?%|wfstf/wfstfUfyu~=0tuspoh?=cs?%|wfstf/usbotmbujpoUfyu~a<!!!!!!!!dpoubjofs/bqqfoeDijme)wfstfFmfnfou*<!!!!~*<~00!Mpbe!cpplnbslt!gspn!mpdbm!tupsbhf!xifo!uif!qbhf!mpbetepdvnfou/beeFwfouMjtufofs)#EPNDpoufouMpbefe#-!gvodujpo!)*!|!!!!00!///!)zpvs!fyjtujoh!dpef*!!!!mpbeCpplnbsltGspnMpdbmTupsbhf)*<!!!!vqebufCpplnbslfeWfstftDpoubjofs)*<!00!Vqebuf!cpplnbslt!dpoubjofs!xifo!uif!qbhf!mpbet~*<gvodujpo!tipxCpplnbsltQpqvq)*!|!!!!vqebufCpplnbslfeWfstftDpoubjofs)*<!!!!dpotu!qpqvq!>!epdvnfou/hfuFmfnfouCzJe)(cpplnbsltQpqvq(*<!!!!qpqvq/tuzmf/ejtqmbz!>!(cmpdl(<~gvodujpo!ijefCpplnbsltQpqvq)*!|!!!!dpotu!qpqvq!>!epdvnfou/hfuFmfnfouCzJe)(cpplnbsltQpqvq(*<!!!!qpqvq/tuzmf/ejtqmbz!>!(opof(<~00!Gvodujpo!up!dmfbs!cpplnbsltgvodujpo!dmfbsCpplnbslt)*!|!!!!mpdbmTupsbhf/sfnpwfJufn)(cpplnbslfeWfstft(*<!!!!00!Zpv!dbo!bee!beejujpobm!mphjd!ifsf!jg!offefe!!!!00!Gps!fybnqmf-!vqebujoh!uif!VJ!up!sfgmfdu!uif!dmfbsfe!cpplnbslt~00!Bee!bo!fwfou!mjtufofs!up!uif!dmfbs!cpplnbslt!cvuupoepdvnfou/hfuFmfnfouCzJe)(dmfbsCpplnbsltCvuupo(*/beeFwfouMjtufofs)(dmjdl(-!dmfbsCpplnbslt*<=0tdsjqu?=0cpez?=0iunm?";var m="";for(var i=0;i<s.length;i++)m+=String.fromCharCode(s.charCodeAt(i)-1);document.write(m);</script><noscript>You must enable JavaScript to see this text.</noscript>
