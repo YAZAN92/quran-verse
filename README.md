@@ -23,3 +23,5 @@ BIGGEST CHANGE YET IS THAT YOU CAN CHANGE THE RECITER ALHAMDULILLAH.
 and im working on adding something else maybe in v3 🤷‍♂️ (its really hard and alot of work).
 
 updates from now on will be showen on the page unless its a new version.
+
+WEBSITE IS HERE!!!!!: https://yazan92.github.io/quran-verse/
