@@ -25,3 +25,9 @@ and im working on adding something else maybe in v3 🤷‍♂️ (its really ha
 updates from now on will be showen on the page unless its a new version.
 
 WEBSITE IS HERE!!!!!: https://yazan92.github.io/quran-verse/
+
+
+Hello 
+
+i have made a better version of this code adn bigger one and it will be relased in a week or more
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!V3!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
